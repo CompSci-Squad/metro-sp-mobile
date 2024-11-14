@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import '../blocs/bloc.dart';
 
-class telaLogin extends StatelessWidget {
+
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+class _LoginPageState extends State<LoginPage> {
+  bool _rememberMe = false;
+  bool _obscurePassword = true;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,7 +26,7 @@ class telaLogin extends StatelessWidget {
             child: passwordField(),
           ),
           SizedBox(height: 20.0), // Espaço adicional entre os campos e o botão
-          submitButton(),
+          submitButton(context),
         ],
       ),
     );
@@ -40,9 +47,9 @@ class telaLogin extends StatelessWidget {
             errorText: snapshot.hasError ? snapshot.error.toString() : null,
             border: OutlineInputBorder(), // Borda retangular
             filled: true, // Habilita o preenchimento interno
-            fillColor: Colors.grey[200], // Cor de fundo dentro do campo de texto
+            fillColor: Color.fromRGBO(0, 20, 137, 1), // Cor de fundo dentro do campo de texto
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue, width: 2.0),
+              borderSide: BorderSide(color: Color(001489), width: 2.0),
             ), // Personaliza a borda ao focar
           ),
         );
@@ -52,35 +59,46 @@ class telaLogin extends StatelessWidget {
 
   Widget passwordField() {
     return TextField(
-      obscureText: true,
+      obscureText: _obscurePassword,
       decoration: InputDecoration(
         hintText: 'Digite sua senha',
         labelText: 'Senha',
         border: OutlineInputBorder(), // Borda retangular
         filled: true, // Habilita o preenchimento interno
-        fillColor: Colors.blue[200], // Cor de fundo dentro do campo de texto
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue, width: 2.0),
+        fillColor: Color.fromRGBO(0, 20, 137, 1), // Cor de fundo dentro do campo de texto
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Color(001489), width: 1.0),
         ),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _obscurePassword ? Icons.visibility : Icons.visibility_off,
+            color: Colors.white,
+        ),
+        onPressed: () {
+            _obscurePassword = _obscurePassword;
+        },
+        )
       ),
     );
   }
 
-  Widget submitButton() {
+  Widget submitButton(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 12.0),
-      child: Row(
-        children: [
-          Expanded(
+      margin:const EdgeInsets.only(top: 12.0),
+      
+      child: SizedBox(
+        width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // Adicionar a lógica de acesso aqui
+                Navigator.pushNamed(context, '/telaInicial');// Adicionar a lógica de acesso aqui
               },
-              child: Text('Acessar'),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[900], // Corrigido para backgroundColor
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                ),
+              child: const Text('Acessar',style: TextStyle(color: Colors.white, fontSize: 16)),
             ),
           ),
-        ],
-      ),
-    );
+      );
   }
 }
