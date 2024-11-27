@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class telaCadastrarNovoUsuario extends StatelessWidget {
+  final List<String> reasons = ["Idade", "P.C.D.", "Desempregado", "Policial"];
+  String? selectedReason;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +40,8 @@ class telaCadastrarNovoUsuario extends StatelessWidget {
                   SizedBox(height: 5),
                   _buildNumeroBilheteUnicoField(),
                   SizedBox(height: 5),
+                  _buildPhotoSection(),
+                  SizedBox(height: 40),
                   _buildSubmitButton(),
                   Spacer(),
                   
@@ -114,7 +118,7 @@ class telaCadastrarNovoUsuario extends StatelessWidget {
           child: ListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text(
-              'Cadastro de Novos Usuarios',
+              'Cadastro de Novos Usuários',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
@@ -246,28 +250,33 @@ class telaCadastrarNovoUsuario extends StatelessWidget {
           'Selecione O Motivo da Gratuidade',
           style: TextStyle(fontSize: 12),
         ),
-        //SizedBox(height: 10),
-        SizedBox(
-          height: 30,
-          child: TextField(
-          obscureText: false,
+        SizedBox(height: 10),
+        DropdownButtonFormField<String>(
+          value: selectedReason,
+          items: reasons.map((String reason) {
+            return DropdownMenuItem<String>(
+              value: reason,
+              child: Text(reason, style: TextStyle(color: Colors.white)),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            selectedReason = newValue;
+          },
           decoration: InputDecoration(
-            hintText: '***.***.***-**',
             filled: true,
             fillColor: Color.fromRGBO(0, 20, 137, 1),
-            hintStyle: TextStyle(color: Colors.white),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),
             ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           ),
-          style: TextStyle(color: Colors.white),
-          keyboardType: TextInputType.number,
+          style: TextStyle(color: Colors.white), // Estilo do texto selecionado
+          dropdownColor: Color.fromRGBO(0, 20, 137, 1), // Cor do menu suspenso
         ),
-        )
-        
       ],
     );
   }
+
 
   Widget _buildRightField() {
     return Column(
@@ -330,6 +339,36 @@ class telaCadastrarNovoUsuario extends StatelessWidget {
     );
   }
 
+Widget _buildPhotoSection() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Fotografe o Usuário',
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+      ),
+      SizedBox(height: 10),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            onPressed: () {
+              // Ação para tirar foto
+            },
+            icon: Icon(Icons.camera_alt, size: 40, color: Colors.black),
+          ),
+          SizedBox(width: 100), // Aumenta o espaçamento lateral entre os ícones
+          IconButton(
+            onPressed: () {
+              // Ação para visualizar foto
+            },
+            icon: Icon(Icons.person, size: 40, color: Colors.black),
+          ),
+        ],
+      ),
+    ],
+  );
+}
 
 
   Widget _buildSubmitButton() {

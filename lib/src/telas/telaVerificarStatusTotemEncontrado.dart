@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class telaVerificarStatusTotem extends StatelessWidget {
+class telaVerificarStatusTotemEncontrado extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +26,16 @@ class telaVerificarStatusTotem extends StatelessWidget {
                 children: [
                   _buildGreetingSection(context),
                   _buildThickerDivider(),
-                  _buildOperationButtons(context),
+                  _buildOperationButtons(),
+                  _buildEstacaoField(),
+                  SizedBox(height: 5),
+                  _buildStatusField(),
+                  SizedBox(height: 5),
+                  _buildLastDayField(),
+                  SizedBox(height: 5),
+                  _buildLastHourField(),
+                  SizedBox(height: 5),
+                  _buildHistoryField(),
                   Spacer(),
                   _buildBackButton(context),
                 ],
@@ -133,7 +142,7 @@ class telaVerificarStatusTotem extends StatelessWidget {
     );
   }
 
-  Widget _buildOperationButtons(BuildContext context) {
+  Widget _buildOperationButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0), // Espaço extra ao redor dos botões
       child: Center(
@@ -166,7 +175,7 @@ class telaVerificarStatusTotem extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     // Navegar para a próxima tela
-                    Navigator.pushNamed(context, '/telaVerificarStatusTotemEncontrado');
+                    //Navigator.pushNamed(context, '');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
@@ -188,6 +197,146 @@ class telaVerificarStatusTotem extends StatelessWidget {
     );
   }
 
+
+  Widget _buildEstacaoField(/*String text*/) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Estação',
+        style: TextStyle(fontSize: 12),
+      ),
+      SizedBox(
+        height: 30,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(0, 20, 137, 1),
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: Colors.grey, width: 1),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          alignment: Alignment.centerLeft,
+          /*child: const Text(
+            text, // O texto que será exibido, vindo do backend
+            style: TextStyle(color: Colors.white, fontSize: 14),
+          )*/
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildStatusField(/*String text*/) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Status',
+        style: TextStyle(fontSize: 12),
+      ),
+      SizedBox(
+        height: 30,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(0, 20, 137, 1),
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: Colors.grey, width: 1),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          alignment: Alignment.centerLeft,
+          /*child: const Text(
+            text, // O texto que será exibido, vindo do backend
+            style: TextStyle(color: Colors.white, fontSize: 14),
+          )*/
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildLastDayField(/*String text*/) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Data Última Operação',
+        style: TextStyle(fontSize: 12),
+      ),
+      SizedBox(
+        height: 30,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(0, 20, 137, 1),
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: Colors.grey, width: 1),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          alignment: Alignment.centerLeft,
+          /*child: const Text(
+            text, // O texto que será exibido, vindo do backend
+            style: TextStyle(color: Colors.white, fontSize: 14),
+          )*/
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildLastHourField(/*String text*/) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Horário Última Operação',
+        style: TextStyle(fontSize: 12),
+      ),
+      SizedBox(
+        height: 30,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(0, 20, 137, 1),
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: Colors.grey, width: 1),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          alignment: Alignment.centerLeft,
+          /*child: const Text(
+            text, // O texto que será exibido, vindo do backend
+            style: TextStyle(color: Colors.white, fontSize: 14),
+          )*/
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildHistoryField(/*String text*/) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Verifique o histórico de falhas',
+        style: TextStyle(fontSize: 12),
+      ),
+      SizedBox(
+        height: 30,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(0, 20, 137, 1),
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: Colors.grey, width: 1),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          alignment: Alignment.centerLeft,
+          /*child: const Text(
+            text, // O texto que será exibido, vindo do backend
+            style: TextStyle(color: Colors.white, fontSize: 14),
+          )*/
+        ),
+      ),
+    ],
+  );
+}
 
   Widget _buildBackButton(BuildContext context) {
     return Align(

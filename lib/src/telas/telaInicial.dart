@@ -194,7 +194,9 @@ Drawer buildAppDrawer(BuildContext context) {
     child: Center(
       child: Column(
         children: [
-          buildStyledButton('Cadastrar Novo Usuário', () {}),
+          buildStyledButton('Cadastrar Novo Usuário', () {
+            Navigator.pushNamed(context, '/telaCadastrarNovoUsuario');
+          }),
           const SizedBox(height: 20), // Espaço entre os botões
           buildStyledButton('Verificar Cadastro Usuário', () {
             Navigator.pushNamed(context, '/telaVerificarCadastro');
