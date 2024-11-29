@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/apiService.dart';
+import 'package:camera/camera.dart';
 
 class telaCadastrarNovoUsuario extends StatefulWidget {
   @override
@@ -9,6 +10,8 @@ class telaCadastrarNovoUsuario extends StatefulWidget {
 class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
   final List<String> reasons = ["Idade", "P.C.D.", "Desempregado", "Policial"];
   String? selectedReason;
+  late List<CameraDescription> cameras;
+  late CameraController cameraController;
   final TextEditingController _cpfController = TextEditingController();
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _sobrenomeController = TextEditingController();
@@ -16,6 +19,7 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
   final TextEditingController _descricaoController = TextEditingController();
   bool _isLoading = false;
   String? _errorMessage;
+
   
   Future<void> _submitUser() async {
     final String cpf = _cpfController.text;

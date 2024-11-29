@@ -1,6 +1,34 @@
 import 'package:flutter/material.dart';
+import '../services/apiService.dart';
+import cpf
+class TelaVerificarCadastroEncontrado extends StatefulWidget {
+  @override
+  _TelaVerificarCadastroEncontradoState createState() => _TelaVerificarCadastroEncontradoState();
+}
 
-class telaVerificarCadastroEncontrado extends StatelessWidget {
+class _TelaVerificarCadastroEncontradoState extends State<TelaVerificarCadastroEncontrado> {
+
+
+
+
+final postResponse = await apiService.get('/passenger/', {
+      'name': nome,
+
+      'C.P.F': cpf,
+      'motivo':
+      'direito':
+
+    });
+
+
+
+
+
+
+
+
+
+
 @override
 Widget build(BuildContext context) {
   return Scaffold(

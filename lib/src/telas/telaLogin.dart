@@ -39,11 +39,9 @@ class _LoginPageState extends State<LoginPage> {
       });
       //return;
     } else{
-      
+
       Navigator.pushReplacementNamed(context,'/telaInicial');
     }
-    // Navegar para a próxima tela
-    //Navigator.pushNamed(context, '/telaInicial');
     setState(() {
       _isLoading = true;
     });

@@ -17,7 +17,7 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
 
     if (cpf.isEmpty) {
       setState(() {
-        _errorMessage = "O campo CPF não pode estar vazio.";
+        _showErrorDialog();
       });
       return;
     }
@@ -30,7 +30,7 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
 
     if (!postResponse.containsKey("accessToken")){
       setState(() {
-        //_showErrorDialog();
+        _showErrorDialog();
       });
       //return;
     } else{
@@ -42,6 +42,8 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
       _isLoading = true;
     });
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +87,49 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
       ),
     );
   }
+
+
+  void _showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Usuário não encontrado no banco de dados',
+                style: TextStyle(color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Fecha o diálogo
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                ),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Color.fromRGBO(0, 20, 137, 1)),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 
   Drawer buildAppDrawer(BuildContext context) {
     return Drawer(

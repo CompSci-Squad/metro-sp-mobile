@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         '/telaVerificarCadastro': (context) => TelaVerificarCadastro(),
         '/telaPerfil': (context) => telaPerfil(),
         '/telaCadastrarNovoUsuario': (context) => telaCadastrarNovoUsuario(),
-        '/telaVerificarCadastroEncontrado': (context) => telaVerificarCadastroEncontrado(),
+        '/telaVerificarCadastroEncontrado': (context) => TelaVerificarCadastroEncontrado(),
         // Adicione mais rotas aqui conforme criar novas telas
       },
     );
