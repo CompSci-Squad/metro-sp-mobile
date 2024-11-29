@@ -1,14 +1,47 @@
 import 'package:flutter/material.dart';
+import '../services/apiService.dart';
 
-class telaVerificarCadastro extends StatelessWidget {
+class TelaVerificarCadastro extends StatefulWidget {
+  @override
+  _TelaVerificarCadastroState createState() => _TelaVerificarCadastroState();
+}
 
+class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
   final TextEditingController _cpfController = TextEditingController();
 
   bool _isLoading = false;
   String? _errorMessage;
 
+  Future<void> _submitUser() async {
+    final String cpf = _cpfController.text;
 
-  
+    if (cpf.isEmpty) {
+      setState(() {
+        _errorMessage = "O campo CPF não pode estar vazio.";
+      });
+      return;
+    }
+
+    print('CPF: $cpf');
+    final postResponse = await apiService.post('/login', {
+      'CPF': cpf,
+    });
+    print(postResponse);
+
+    if (!postResponse.containsKey("accessToken")){
+      setState(() {
+        //_showErrorDialog();
+      });
+      //return;
+    } else{
+      Navigator.pushReplacementNamed(context,'/telaVerificarCadastroEncontrado');
+    }
+    // Navegar para a próxima tela
+    //Navigator.pushNamed(context, '/telaInicial');
+    setState(() {
+      _isLoading = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +51,12 @@ class telaVerificarCadastro extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Barra superior com a imagem, como na tela de login
           Container(
-            width: double.infinity, // Ocupa toda a largura da tela
-            height: 28, // Define a altura para 28
+            width: double.infinity,
+            height: 28,
             child: Image.asset(
-              'assets/barraMetro.png', // Caminho da imagem
-              fit: BoxFit.cover, // A imagem cobre a largura total
+              'assets/barraMetro.png',
+              fit: BoxFit.cover,
             ),
           ),
           Expanded(
@@ -35,6 +67,13 @@ class telaVerificarCadastro extends StatelessWidget {
                 children: [
                   _buildGreetingSection(context),
                   _buildThickerDivider(),
+                  if (_errorMessage != null)
+                    Text(
+                      _errorMessage!,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  if (_isLoading)
+                    Center(child: CircularProgressIndicator()),
                   _buildOperationButtons(context),
                   Spacer(),
                   _buildBackButton(context),
@@ -106,9 +145,9 @@ class telaVerificarCadastro extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 80.0, top: 8.0, bottom: 8.0), // Ajusta o espaçamento ao redor do ListTile
+          padding: const EdgeInsets.only(left: 80.0, top: 8.0, bottom: 8.0),
           child: ListTile(
-            contentPadding: EdgeInsets.zero, // Remove o padding interno do ListTile
+            contentPadding: EdgeInsets.zero,
             title: const Text(
               'Verificar Cadastro Usuário',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -116,17 +155,17 @@ class telaVerificarCadastro extends StatelessWidget {
           ),
         ),
         Positioned(
-          left: 0, // Ícone alinhado bem ao canto esquerdo
-          top: 8, // Alinhamento vertical com o ListTile
+          left: 0,
+          top: 8,
           child: Builder(
             builder: (context) => IconButton(
               icon: const Icon(
                 Icons.menu,
-                size: 43, // Tamanho do ícone
+                size: 43,
                 color: Colors.black,
               ),
               onPressed: () {
-                Scaffold.of(context).openDrawer(); // Abre o Drawer ao clicar nas três barrinhas
+                Scaffold.of(context).openDrawer();
               },
             ),
           ),
@@ -144,7 +183,7 @@ class telaVerificarCadastro extends StatelessWidget {
 
   Widget _buildOperationButtons(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0), // Espaço extra ao redor dos botões
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -172,15 +211,12 @@ class telaVerificarCadastro extends StatelessWidget {
             SizedBox(height: 20),
             Center(
               child: SizedBox(
-                width: 200, // Ajuste a largura conforme necessário
+                width: 200,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Navegar para a próxima tela
-                    Navigator.pushReplacementNamed(context, '/telaVerificarCadastroEncontrado');
-                  },
+                  onPressed: _submitUser,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
-                    padding: EdgeInsets.symmetric(vertical: 20), // Aumenta a altura do botão
+                    padding: EdgeInsets.symmetric(vertical: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
                     ),
@@ -198,15 +234,13 @@ class telaVerificarCadastro extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildBackButton(BuildContext context) {
     return Align(
       alignment: Alignment.bottomLeft,
       child: IconButton(
         icon: Icon(Icons.arrow_back, size: 30),
         onPressed: () {
-          Navigator.pop(context); // Retorna à tela anterior
+          Navigator.pop(context);
         },
       ),
     );

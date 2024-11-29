@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../services/apiService.dart';
 
 class telaCadastrarNovoUsuario extends StatefulWidget {
   @override
@@ -13,7 +13,8 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _sobrenomeController = TextEditingController();
   final TextEditingController _reasonController = TextEditingController();
-  bool _isLoading = false;
+  final TextEditingController _descricaoController = TextEditingController();
+  /*bool _isLoading = false;
   String? _errorMessage;
   
   Future<void> _submitUser() async {
@@ -21,10 +22,10 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
     final String nome = _nomeController.text;
     final String sobrenome = _sobrenomeController.text;
     final String reason = _reasonController.text;
-    //final String nome = _nomeController.text;
+    final String descricao = _descricaoController.text;
 
 
-    if (cpf.isEmpty || nome.isEmpty || sobrenome.isEmpty) {
+    if (cpf.isEmpty || nome.isEmpty || sobrenome.isEmpty || descricao.isEmpty) {
       setState(() {
         _errorMessage = 'Please enter both username and password.';
       });
@@ -34,14 +35,31 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
     print('Nome: $nome');
     print('Sobrenome: $sobrenome');
     print('Motivo: $reason');
+    print('Descrição: $descricao' );
 
+    final postResponse = await apiService.post('/login', {
+      'CPF': cpf,
+      'Nome': nome,
+      'Sobrenome': sobrenome,
+      'Descrição': descricao,
+    });
+    print(postResponse);
+
+    if (!postResponse.containsKey("accessToken")){
+      setState(() {
+        //_showErrorDialog();
+      });
+      //return;
+    } else{
+      Navigator.pushReplacementNamed(context,'/telaInicial');
+    }
     // Navegar para a próxima tela
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
   }
-
+*/
 
 
   @override
@@ -389,7 +407,7 @@ Widget _buildPhotoSection() {
         width: 200,
         child: ElevatedButton(
           onPressed: () {
-            _submitUser();// Ação do botão Reportar
+            //_submitUser();// Ação do botão Reportar
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromRGBO(0, 20, 137, 1),

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => LoginPage(),
         '/telaInicial': (context) => telaInicial(),
-        '/telaVerificarCadastro': (context) => telaVerificarCadastro(),
+        '/telaVerificarCadastro': (context) => TelaVerificarCadastro(),
         '/telaPerfil': (context) => telaPerfil(),
         '/telaCadastrarNovoUsuario': (context) => telaCadastrarNovoUsuario(),
         '/telaVerificarCadastroEncontrado': (context) => telaVerificarCadastroEncontrado(),
