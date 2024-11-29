@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/apiService.dart';
+import '../globalVariables.dart';
 
 class TelaVerificarCadastro extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
   bool _isLoading = false;
   String? _errorMessage;
 
-  Future<void> _submitUser() async {
+  Future<void> findUser() async {
     final String cpf = _cpfController.text;
 
     if (cpf.isEmpty) {
@@ -23,17 +24,16 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
     }
 
     print('CPF: $cpf');
-    final postResponse = await apiService.post('/login', {
-      'CPF': cpf,
-    });
-    print(postResponse);
+    final passenger = await apiService.get("/passenger/cpf/$cpf");
 
-    if (!postResponse.containsKey("accessToken")){
+
+    if (!passenger.containsKey("name")){
       setState(() {
         _showErrorDialog();
       });
       //return;
     } else{
+      globalvariables.setPassengerResponse(passenger);
       Navigator.pushReplacementNamed(context,'/telaVerificarCadastroEncontrado');
     }
     // Navegar para a próxima tela
@@ -241,7 +241,7 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
               child: SizedBox(
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: _submitUser,
+                  onPressed: findUser,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
                     padding: EdgeInsets.symmetric(vertical: 20),
