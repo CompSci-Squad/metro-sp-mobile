@@ -1,51 +1,63 @@
 import 'package:flutter/material.dart';
 
-class telaVerificarStatusTotemEncontrado extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      drawer: buildAppDrawer(context),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Barra superior com a imagem, como na tela de login
-          Container(
-            width: double.infinity, // Ocupa toda a largura da tela
-            height: 28, // Define a altura para 28
-            child: Image.asset(
-              'assets/barraMetro.png', // Caminho da imagem
-              fit: BoxFit.cover, // A imagem cobre a largura total
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildGreetingSection(context),
-                  _buildThickerDivider(),
-                  _buildOperationButtons(),
-                  _buildEstacaoField(),
-                  SizedBox(height: 5),
-                  _buildStatusField(),
-                  SizedBox(height: 5),
-                  _buildLastDayField(),
-                  SizedBox(height: 5),
-                  _buildLastHourField(),
-                  SizedBox(height: 5),
-                  _buildHistoryField(),
-                  Spacer(),
-                  _buildBackButton(context),
-                ],
+class telaVerificarCadastroEncontrado extends StatelessWidget {
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.white,
+    drawer: buildAppDrawer(context),
+    body: SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Barra superior com a imagem
+              Container(
+                width: double.infinity,
+                height: 28,
+                child: Image.asset(
+                  'assets/barraMetro.png',
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
+              SizedBox(height: 10),
+
+              // Cabeçalho
+              _buildGreetingSection(context),
+              _buildThickerDivider(),
+              SizedBox(height: 10),
+
+              // Conteúdo principal
+              _buildOperationButtons(),
+              SizedBox(height: 10),
+              _buildNameField(),
+              SizedBox(height: 5),
+              _buildSurnameField(),
+              SizedBox(height: 5),
+              _buildCPFField(),
+              SizedBox(height: 5),
+              _buildReasonField(),
+              SizedBox(height: 5),
+              _buildRightField(),
+              SizedBox(height: 20),
+
+              // Botão Voltar
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: _buildBackButton(context),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+
+
 
   Drawer buildAppDrawer(BuildContext context) {
     return Drawer(
@@ -110,7 +122,7 @@ class telaVerificarStatusTotemEncontrado extends StatelessWidget {
           child: ListTile(
             contentPadding: EdgeInsets.zero, // Remove o padding interno do ListTile
             title: const Text(
-              'Verificar Status Do Totem',
+              'Verificar Cadastro Usuário',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
@@ -143,67 +155,89 @@ class telaVerificarStatusTotemEncontrado extends StatelessWidget {
   }
 
   Widget _buildOperationButtons() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0), // Espaço extra ao redor dos botões
-      child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Digite o I.D. do totem',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              obscureText: false,
-              decoration: InputDecoration(
-                hintText: 'I.D.totem',
-                filled: true,
-                fillColor: Color.fromRGBO(0, 20, 137, 1),
-                hintStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 20.0), // Espaço extra ao redor dos botões
+    child: Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Digite o C.P.F. do Usuário',
+            style: TextStyle(fontSize: 16),
+          ),
+          SizedBox(height: 10),
+          TextField(
+            obscureText: false,
+            decoration: InputDecoration(
+              hintText: '***.***.***-**',
+              filled: true,
+              fillColor: Color.fromRGBO(0, 20, 137, 1),
+              hintStyle: TextStyle(color: Colors.white),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
               ),
-              style: TextStyle(color: Colors.white),
-              keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 20),
-            Center(
-              child: SizedBox(
-                width: 200, // Ajuste a largura conforme necessário
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navegar para a próxima tela
-                    //Navigator.pushNamed(context, '');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
-                    padding: EdgeInsets.symmetric(vertical: 20), // Aumenta a altura do botão
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  child: Text(
-                    'Verificar',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+            style: TextStyle(color: Colors.white),
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 20),
+          Center(
+            child: SizedBox(
+              width: 200, // Ajuste a largura conforme necessário
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navegar para a próxima tela
+                  // Navigator.pushNamed(context, '');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
+                  padding: EdgeInsets.symmetric(vertical: 20), // Aumenta a altura do botão
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
                   ),
                 ),
+                child: Text(
+                  'Verificar',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+          SizedBox(height: 10), // Espaço entre o botão e a mensagem
+          Center(
+            child: Column(
+              children: [
+                Text(
+                  'Usuário encontrado no banco de dados',
+                  style: TextStyle(
+                    color: Colors.green, // Cor verde
+                    fontSize: 14, // Tamanho de fonte 14
+                  ),
+                ),
+                SizedBox(height: 10), // Espaço entre a mensagem e o ícone
+                Icon(
+                  Icons.account_circle,
+                  size: 50,
+                  color: Color.fromRGBO(0, 20, 137, 1), // Cor azul do perfil
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
 
-  Widget _buildEstacaoField(/*String text*/) {
+
+
+  Widget _buildNameField(/*String text*/) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        'Estação',
+        'Nome',
         style: TextStyle(fontSize: 12),
       ),
       SizedBox(
@@ -226,12 +260,12 @@ class telaVerificarStatusTotemEncontrado extends StatelessWidget {
   );
 }
 
-Widget _buildStatusField(/*String text*/) {
+Widget _buildSurnameField(/*String text*/) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        'Status',
+        'Sobrenome',
         style: TextStyle(fontSize: 12),
       ),
       SizedBox(
@@ -254,12 +288,12 @@ Widget _buildStatusField(/*String text*/) {
   );
 }
 
-Widget _buildLastDayField(/*String text*/) {
+Widget _buildCPFField(/*String text*/) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        'Data Última Operação',
+        'C.P.F.',
         style: TextStyle(fontSize: 12),
       ),
       SizedBox(
@@ -282,12 +316,12 @@ Widget _buildLastDayField(/*String text*/) {
   );
 }
 
-Widget _buildLastHourField(/*String text*/) {
+Widget _buildReasonField(/*String text*/) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        'Horário Última Operação',
+        'Motivo da Gratuidade',
         style: TextStyle(fontSize: 12),
       ),
       SizedBox(
@@ -310,12 +344,12 @@ Widget _buildLastHourField(/*String text*/) {
   );
 }
 
-Widget _buildHistoryField(/*String text*/) {
+Widget _buildRightField(/*String text*/) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        'Verifique o histórico de falhas',
+        'direitoGratuidade',
         style: TextStyle(fontSize: 12),
       ),
       SizedBox(

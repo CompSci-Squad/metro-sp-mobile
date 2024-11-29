@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 
 class telaVerificarCadastro extends StatelessWidget {
+
+  final TextEditingController _cpfController = TextEditingController();
+
+  bool _isLoading = false;
+  String? _errorMessage;
+
+
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +35,7 @@ class telaVerificarCadastro extends StatelessWidget {
                 children: [
                   _buildGreetingSection(context),
                   _buildThickerDivider(),
-                  _buildOperationButtons(),
+                  _buildOperationButtons(context),
                   Spacer(),
                   _buildBackButton(context),
                 ],
@@ -133,7 +142,7 @@ class telaVerificarCadastro extends StatelessWidget {
     );
   }
 
-  Widget _buildOperationButtons() {
+  Widget _buildOperationButtons(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0), // Espaço extra ao redor dos botões
       child: Center(
@@ -146,6 +155,7 @@ class telaVerificarCadastro extends StatelessWidget {
             ),
             SizedBox(height: 10),
             TextField(
+              controller: _cpfController,
               obscureText: false,
               decoration: InputDecoration(
                 hintText: '***.***.***-**',
@@ -166,7 +176,7 @@ class telaVerificarCadastro extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     // Navegar para a próxima tela
-                    //Navigator.pushNamed(context, '');
+                    Navigator.pushReplacementNamed(context, '/telaVerificarCadastroEncontrado');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(0, 20, 137, 1),

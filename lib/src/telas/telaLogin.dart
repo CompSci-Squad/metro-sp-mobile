@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../services/apiService.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -8,6 +8,44 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _rememberMe = false;
   bool _obscurePassword = true;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String? _errorMessage;
+
+
+  Future<void> _submitLogin() async {
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter both username and password.';
+      });
+      return;
+    }
+    print('E-mail: $email');
+    print('Senha: $password');
+    final postResponse = await apiService.post('/login', {
+      'email': email,
+      'password': password,
+    });
+    print(postResponse);
+
+    if (!postResponse.containsKey("accessToken")){
+      setState(() {
+        
+      });
+      return;
+    }
+    // Navegar para a próxima tela
+    //Navigator.pushNamed(context, '/telaInicial');
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+  }
 
   // Função para exibir o diálogo de "Esqueci minha senha"
   void _showForgotPasswordDialog() {
@@ -112,6 +150,7 @@ class _LoginPageState extends State<LoginPage> {
         const Text('E-mail', style: TextStyle(fontSize: 16)),
         const SizedBox(height: 5),
         TextField(
+          controller: _emailController,
           decoration: InputDecoration(
             hintText: 'Digite seu e-mail @metro',
             filled: true,
@@ -136,6 +175,7 @@ class _LoginPageState extends State<LoginPage> {
         const Text('Digite sua senha', style: TextStyle(fontSize: 16)),
         const SizedBox(height: 5),
         TextField(
+          controller: _passwordController,
           obscureText: _obscurePassword,
           decoration: InputDecoration(
             hintText: 'Digite sua senha',
@@ -202,7 +242,8 @@ class _LoginPageState extends State<LoginPage> {
         width: 200,
         child: ElevatedButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/telaInicial');
+            _submitLogin();
+
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromRGBO(0, 20, 137, 1),

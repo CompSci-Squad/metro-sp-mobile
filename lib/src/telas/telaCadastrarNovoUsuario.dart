@@ -1,27 +1,68 @@
 import 'package:flutter/material.dart';
 
-class telaCadastrarNovoUsuario extends StatelessWidget {
+
+class telaCadastrarNovoUsuario extends StatefulWidget {
+  @override
+  _telaCadastrarNovoUsuario createState() => _telaCadastrarNovoUsuario();
+}
+
+class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
   final List<String> reasons = ["Idade", "P.C.D.", "Desempregado", "Policial"];
   String? selectedReason;
+  final TextEditingController _cpfController = TextEditingController();
+  final TextEditingController _nomeController = TextEditingController();
+  final TextEditingController _sobrenomeController = TextEditingController();
+  final TextEditingController _reasonController = TextEditingController();
+  bool _isLoading = false;
+  String? _errorMessage;
+  
+  Future<void> _submitUser() async {
+    final String cpf = _cpfController.text;
+    final String nome = _nomeController.text;
+    final String sobrenome = _sobrenomeController.text;
+    final String reason = _reasonController.text;
+    //final String nome = _nomeController.text;
+
+
+    if (cpf.isEmpty || nome.isEmpty || sobrenome.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter both username and password.';
+      });
+      return;
+    }
+    print('CPF: $cpf');
+    print('Nome: $nome');
+    print('Sobrenome: $sobrenome');
+    print('Motivo: $reason');
+
+    // Navegar para a próxima tela
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: buildAppDrawer(context),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Barra superior com a imagem, como na tela de login
-          Container(
-            width: double.infinity,
-            height: 28,
-            child: Image.asset(
-              'assets/barraMetro.png',
-              fit: BoxFit.cover,
+      body: SingleChildScrollView( // Adiciona scroll na tela
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Barra superior com a imagem, como na tela de login
+            Container(
+              width: double.infinity,
+              height: 28,
+              child: Image.asset(
+                'assets/barraMetro.png',
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          Expanded(
-            child: Padding(
+            Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,19 +79,15 @@ class telaCadastrarNovoUsuario extends StatelessWidget {
                   SizedBox(height: 5),
                   _buildRightField(),
                   SizedBox(height: 5),
-                  _buildNumeroBilheteUnicoField(),
-                  SizedBox(height: 5),
                   _buildPhotoSection(),
                   SizedBox(height: 40),
                   _buildSubmitButton(),
-                  Spacer(),
-                  
-                  _buildBackButton(context),
                 ],
               ),
             ),
-          ),
-        ],
+            _buildBackButton(context),
+          ],
+        ),
       ),
     );
   }
@@ -162,6 +199,7 @@ class telaCadastrarNovoUsuario extends StatelessWidget {
         SizedBox(
           height: 30,
           child: TextField(
+            controller: _cpfController,
           obscureText: false,
           decoration: InputDecoration(
             hintText: '***.***.***-**',
@@ -192,6 +230,7 @@ class telaCadastrarNovoUsuario extends StatelessWidget {
         SizedBox(
           height: 30,
           child: TextField(
+            controller: _nomeController,
           obscureText: false,
           decoration: InputDecoration(
             hintText: '_______',
@@ -223,6 +262,7 @@ class telaCadastrarNovoUsuario extends StatelessWidget {
         SizedBox(
           height: 30,
           child: TextField(
+            controller: _sobrenomeController,
           obscureText: false,
           decoration: InputDecoration(
             hintText: '_______',
@@ -309,35 +349,7 @@ class telaCadastrarNovoUsuario extends StatelessWidget {
     );
   }
 
-  Widget _buildNumeroBilheteUnicoField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Digite o Número do Bilhete Único de Gratuidade (Se Usuário Possuir)',
-          style: TextStyle(fontSize: 12),
-        ),
-        //SizedBox(height: 10),
-        SizedBox(
-          height: 30,
-          child: TextField(
-          obscureText: false,
-          decoration: InputDecoration(
-            hintText: '***.***.***-**',
-            filled: true,
-            fillColor: Color.fromRGBO(0, 20, 137, 1),
-            hintStyle: TextStyle(color: Colors.white),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-          ),
-          style: TextStyle(color: Colors.white),
-          keyboardType: TextInputType.number,
-        ),
-        ),  
-      ],
-    );
-  }
+  
 
 Widget _buildPhotoSection() {
   return Column(
@@ -377,7 +389,7 @@ Widget _buildPhotoSection() {
         width: 200,
         child: ElevatedButton(
           onPressed: () {
-            // Ação do botão Reportar
+            _submitUser();// Ação do botão Reportar
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
