@@ -12,16 +12,16 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
   final TextEditingController _cpfController = TextEditingController();
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _sobrenomeController = TextEditingController();
-  final TextEditingController _reasonController = TextEditingController();
+ // final TextEditingController _reasonController = TextEditingController();
   final TextEditingController _descricaoController = TextEditingController();
-  /*bool _isLoading = false;
+  bool _isLoading = false;
   String? _errorMessage;
   
   Future<void> _submitUser() async {
     final String cpf = _cpfController.text;
     final String nome = _nomeController.text;
     final String sobrenome = _sobrenomeController.text;
-    final String reason = _reasonController.text;
+    //final String reason = _reasonController.text;
     final String descricao = _descricaoController.text;
 
 
@@ -34,7 +34,6 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
     print('CPF: $cpf');
     print('Nome: $nome');
     print('Sobrenome: $sobrenome');
-    print('Motivo: $reason');
     print('Descrição: $descricao' );
 
     final postResponse = await apiService.post('/login', {
@@ -51,7 +50,7 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
       });
       //return;
     } else{
-      Navigator.pushReplacementNamed(context,'/telaInicial');
+      //Navigator.pushReplacementNamed(context,'/telaInicial');
     }
     // Navegar para a próxima tela
     setState(() {
@@ -59,7 +58,7 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
       _errorMessage = null;
     });
   }
-*/
+
 
 
   @override
@@ -133,23 +132,6 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
           _buildDrawerItem('Verificar Cadastro Usuário', () {
             Navigator.pushReplacementNamed(context, '/telaVerificarCadastro');
           }),
-          _buildDrawerItem('Verificar Status Do Totem', () {
-            Navigator.pushReplacementNamed(context, '/telaVerificarStatusTotem');
-          }),
-          _buildDrawerItem(
-            'Reportar Falha De Totem',
-            () {
-              Navigator.pushReplacementNamed(context, '/telaReportarFalhaTotem');
-            },
-            textColor: Colors.red,
-          ),
-          _buildDrawerItem(
-            'Desbloquear Totem',
-            () {
-              Navigator.pushReplacementNamed(context, '/telaDesbloquearTotem');
-            },
-            textColor: Colors.green,
-          ),
         ],
       ),
     );
@@ -217,7 +199,7 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
         SizedBox(
           height: 30,
           child: TextField(
-            controller: _cpfController,
+          controller: _cpfController,
           obscureText: false,
           decoration: InputDecoration(
             hintText: '***.***.***-**',
@@ -248,7 +230,7 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
         SizedBox(
           height: 30,
           child: TextField(
-            controller: _nomeController,
+          controller: _nomeController,
           obscureText: false,
           decoration: InputDecoration(
             hintText: '_______',
@@ -280,7 +262,7 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
         SizedBox(
           height: 30,
           child: TextField(
-            controller: _sobrenomeController,
+          controller: _sobrenomeController,
           obscureText: false,
           decoration: InputDecoration(
             hintText: '_______',
@@ -348,6 +330,7 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
         SizedBox(
           height: 30,
           child: TextField(
+            controller: _descricaoController,
           obscureText: false,
           decoration: InputDecoration(
             hintText: '',
@@ -407,7 +390,7 @@ Widget _buildPhotoSection() {
         width: 200,
         child: ElevatedButton(
           onPressed: () {
-            //_submitUser();// Ação do botão Reportar
+            _submitUser();
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromRGBO(0, 20, 137, 1),

@@ -109,23 +109,6 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
           _buildDrawerItem('Verificar Cadastro Usuário', () {
             Navigator.pushReplacementNamed(context, '/telaVerificarCadastro');
           }),
-          _buildDrawerItem('Verificar Status Do Totem', () {
-            Navigator.pushReplacementNamed(context, '/telaVerificarStatusTotem');
-          }),
-          _buildDrawerItem(
-            'Reportar Falha De Totem',
-            () {
-              Navigator.pushReplacementNamed(context, '/telaReportarFalhaTotem');
-            },
-            textColor: Colors.red,
-          ),
-          _buildDrawerItem(
-            'Desbloquear Totem',
-            () {
-              Navigator.pushReplacementNamed(context, '/telaDesbloquearTotem');
-            },
-            textColor: Colors.green,
-          ),
         ],
       ),
     );
