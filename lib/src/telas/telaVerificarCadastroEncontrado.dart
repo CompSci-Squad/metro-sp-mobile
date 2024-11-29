@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../services/apiService.dart';
 import '../globalVariables.dart';
 
 class TelaVerificarCadastroEncontrado extends StatefulWidget {
@@ -11,6 +10,19 @@ class TelaVerificarCadastroEncontrado extends StatefulWidget {
 class _TelaVerificarCadastroEncontradoState
     extends State<TelaVerificarCadastroEncontrado> {
   final passenger = globalvariables.getPassengerResponse();
+  @override
+  void initState() {
+    super.initState();
+    // Code to be executed when the screen is rendered
+    _onScreenRendered();
+  }
+
+  void _onScreenRendered() {
+    print(passenger);
+    // You can perform any task here (e.g., fetching data, logging, etc.)
+  }
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +53,6 @@ class _TelaVerificarCadastroEncontradoState
                 SizedBox(height: 10),
 
                 // Conteúdo principal
-                _buildOperationButtons(),
                 SizedBox(height: 10),
                 _buildNameField(),
                 SizedBox(height: 5),
@@ -152,82 +163,7 @@ class _TelaVerificarCadastroEncontradoState
     );
   }
 
-  Widget _buildOperationButtons() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          vertical: 20.0), // Espaço extra ao redor dos botões
-      child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Digite o C.P.F. do Usuário',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              obscureText: false,
-              decoration: InputDecoration(
-                hintText: '***.***.***-**',
-                filled: true,
-                fillColor: Color.fromRGBO(0, 20, 137, 1),
-                hintStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
-              style: TextStyle(color: Colors.white),
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: SizedBox(
-                width: 200, // Ajuste a largura conforme necessário
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navegar para a próxima tela
-                    // Navigator.pushNamed(context, '');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
-                    padding: EdgeInsets.symmetric(
-                        vertical: 20), // Aumenta a altura do botão
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  child: Text(
-                    'Verificar',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 10), // Espaço entre o botão e a mensagem
-            Center(
-              child: Column(
-                children: [
-                  Text(
-                    'Usuário encontrado no banco de dados',
-                    style: TextStyle(
-                      color: Colors.green, // Cor verde
-                      fontSize: 14, // Tamanho de fonte 14
-                    ),
-                  ),
-                  SizedBox(height: 10), // Espaço entre a mensagem e o ícone
-                  Icon(
-                    Icons.account_circle,
-                    size: 50,
-                    color: Color.fromRGBO(0, 20, 137, 1), // Cor azul do perfil
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  
 
   Widget _buildNameField(/*String text*/) {
     return Column(
@@ -247,10 +183,10 @@ class _TelaVerificarCadastroEncontradoState
             ),
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             alignment: Alignment.centerLeft,
-            /*child: const Text(
-            text, // O texto que será exibido, vindo do backend
+            child: Text(
+            passenger["name"].split(" ")[0],
             style: TextStyle(color: Colors.white, fontSize: 14),
-          )*/
+          )
           ),
         ),
       ],
@@ -275,10 +211,10 @@ class _TelaVerificarCadastroEncontradoState
             ),
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             alignment: Alignment.centerLeft,
-            /*child: const Text(
-            text, // O texto que será exibido, vindo do backend
+            child: Text(
+            passenger["name"].split(" ")[1], // O texto que será exibido, vindo do backend
             style: TextStyle(color: Colors.white, fontSize: 14),
-          )*/
+          )
           ),
         ),
       ],
@@ -303,10 +239,10 @@ class _TelaVerificarCadastroEncontradoState
             ),
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             alignment: Alignment.centerLeft,
-            /*child: const Text(
-            text, // O texto que será exibido, vindo do backend
+            child: Text(
+            passenger["cpf"],
             style: TextStyle(color: Colors.white, fontSize: 14),
-          )*/
+          )
           ),
         ),
       ],
@@ -331,10 +267,10 @@ class _TelaVerificarCadastroEncontradoState
             ),
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             alignment: Alignment.centerLeft,
-            /*child: const Text(
-            text, // O texto que será exibido, vindo do backend
+            child: Text(
+            passenger['justificationType'], 
             style: TextStyle(color: Colors.white, fontSize: 14),
-          )*/
+          )
           ),
         ),
       ],
@@ -359,10 +295,10 @@ class _TelaVerificarCadastroEncontradoState
             ),
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             alignment: Alignment.centerLeft,
-            /*child: const Text(
-            text, // O texto que será exibido, vindo do backend
+            child: Text(
+            passenger['justificationDetails'], 
             style: TextStyle(color: Colors.white, fontSize: 14),
-          )*/
+          )
           ),
         ),
       ],
