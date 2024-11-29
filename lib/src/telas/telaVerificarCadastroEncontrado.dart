@@ -51,7 +51,7 @@ class _TelaVerificarCadastroEncontradoState
                 _buildGreetingSection(context),
                 _buildThickerDivider(),
                 SizedBox(height: 10),
-
+                _buildProfileImage(),
                 // Conteúdo principal
                 SizedBox(height: 10),
                 _buildNameField(),
@@ -163,7 +163,19 @@ class _TelaVerificarCadastroEncontradoState
     );
   }
 
-  
+  Widget _buildProfileImage() {
+    return Center(
+      child: CircleAvatar(
+        radius: 40, // Tamanho do círculo (ajuste conforme necessário)
+        backgroundColor: Colors.grey[300], // Cor de fundo para simular um espaço para foto
+        child: Icon(
+          Icons.person,
+          size: 50, // Ícone de "perfil" dentro do círculo
+          color: Colors.black54,
+        ),
+      ),
+    );
+  }
 
   Widget _buildNameField(/*String text*/) {
     return Column(

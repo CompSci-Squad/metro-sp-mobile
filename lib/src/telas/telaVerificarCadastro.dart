@@ -27,7 +27,7 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
     final passenger = await apiService.get("/passenger/cpf/$cpf");
 
 
-    if (!passenger.containsKey("name")){
+    if (!passenger.containsValue(cpf)){
       setState(() {
         _showErrorDialog();
       });
