@@ -3,24 +3,26 @@ import 'package:tela_login/src/services/apiService.dart';
 import '../globalVariables.dart';
 
 class telaPerfil extends StatefulWidget {
-@override
-  _TelaPerfilState createState() =>
-      _TelaPerfilState();
+  @override
+  _TelaPerfilState createState() => _TelaPerfilState();
 }
-class _TelaPerfilState
-    extends State<telaPerfil>{
+
+class _TelaPerfilState extends State<telaPerfil> {
   dynamic user;
   final userEmail = globalvariables.getEmail();
-  
+
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     _onScreenRendered();
   }
 
-  void _onScreenRendered() {
-    setState(() async {
-      user = await apiService.get("/user/:email");
+  void _onScreenRendered() async {
+    final userData = await apiService.get("/user/$userEmail");
+    print(userData);
+
+    setState(() {
+      user = userData;
     });
   }
 
@@ -32,7 +34,6 @@ class _TelaPerfilState
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Barra superior com a imagem, como na tela de login
           Container(
             width: double.infinity,
             height: 28,
@@ -49,13 +50,13 @@ class _TelaPerfilState
                 children: [
                   _buildGreetingSection(context),
                   _buildThickerDivider(),
-                  _buildProfileImage(), // Adiciona a foto de perfil
-                  SizedBox(height: 16), // Espaço entre a foto e o próximo item
-                  _buildProfileItem('Número De Registro',  user["id"]),
+                  _buildProfileImage(),
+                  SizedBox(height: 16),
+                  _buildNumeroRegistro(),
                   _buildThickerDivider(),
-                  _buildProfileItem('E-mail @metro', ''),
+                  _buildEmailMetro(),
                   _buildThickerDivider(),
-                  _buildProfileItem('Estação', user["stations"]),
+                  _buildEstacao(),
                   _buildThickerDivider(),
                   Spacer(),
                   _buildBackButton(context),
@@ -86,7 +87,8 @@ class _TelaPerfilState
             ),
           ),
           _buildDrawerItem('Cadastrar Novo Usuário', () {
-            Navigator.pushReplacementNamed(context, '/telaCadastrarNovoUsuario');
+            Navigator.pushReplacementNamed(
+                context, '/telaCadastrarNovoUsuario');
           }),
           _buildDrawerItem('Verificar Cadastro Usuário', () {
             Navigator.pushReplacementNamed(context, '/telaVerificarCadastro');
@@ -96,7 +98,8 @@ class _TelaPerfilState
     );
   }
 
-  ListTile _buildDrawerItem(String title, VoidCallback onTap, {Color? textColor}) {
+  ListTile _buildDrawerItem(String title, VoidCallback onTap,
+      {Color? textColor}) {
     return ListTile(
       title: Text(
         title,
@@ -114,7 +117,7 @@ class _TelaPerfilState
           child: ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(
-              'Olá', /*${user["name"]*/
+              'Olá',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
@@ -143,7 +146,8 @@ class _TelaPerfilState
     return Center(
       child: CircleAvatar(
         radius: 40, // Tamanho do círculo (ajuste conforme necessário)
-        backgroundColor: Colors.grey[300], // Cor de fundo para simular um espaço para foto
+        backgroundColor:
+            Colors.grey[300], // Cor de fundo para simular um espaço para foto
         child: Icon(
           Icons.person,
           size: 50, // Ícone de "perfil" dentro do círculo
@@ -160,25 +164,58 @@ class _TelaPerfilState
     );
   }
 
-  Widget _buildProfileItem(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(fontSize: 16, color: Colors.black54),
-          ),
-        ],
-      ),
+  Widget _buildNumeroRegistro() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Número De Registro',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 4),
+        Text(
+          'teste',
+          style: TextStyle(fontSize: 16, color: Colors.black54),
+        ),
+      ],
     );
   }
+
+  Widget _buildEmailMetro() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'E-mail @metro',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 4),
+        Text(
+          'teste',
+          style: TextStyle(fontSize: 16, color: Colors.black54),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEstacao() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Estação',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 4),
+        Text(
+          'teste',
+          style: TextStyle(fontSize: 16, color: Colors.black54),
+        ),
+      ],
+    );
+  }
+
+
 
   Widget _buildBackButton(BuildContext context) {
     return Align(
