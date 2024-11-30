@@ -1,24 +1,19 @@
-class Globalvariables {
-  String? email;
-  dynamic PassengerResponse;
+import 'package:flutter/material.dart';
 
-  Globalvariables();
+class GlobalVariables with ChangeNotifier {
+  Map<String, dynamic>?_user;
+  Map<String, dynamic>? _passengerResponse;
 
-  String? getEmail() {
-    return email;
-  }
+  Map<String, dynamic>? get user => _user;
+  Map<String, dynamic>? get passengerResponse => _passengerResponse;
 
-  void setEmail(String newEmail) {
-    email = newEmail;
-  }
-
-  dynamic getPassengerResponse() {
-    return PassengerResponse;
+  void setUser(Map<String, dynamic> newUser) {
+    _user = newUser;
+    notifyListeners();
   }
 
   void setPassengerResponse(dynamic newPassengerResponse) {
-    PassengerResponse = newPassengerResponse;
+    _passengerResponse = newPassengerResponse;
+    notifyListeners();
   }
 }
-
-final globalvariables = Globalvariables();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../services/apiService.dart';
 import '../globalVariables.dart';
 
@@ -14,31 +15,102 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<void> _submitLogin() async {
-    final String email = _emailController.text;
-    final String password = _passwordController.text;
+  bool _isInputValid(String email, String password) {
+    return email.isNotEmpty && password.isNotEmpty;
+  }
 
-    if (email.isEmpty || password.isEmpty) {
-      setState(() {
-        _showErrorDialog();
-      });
+  Future<void> _submitLogin() async {
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    if (!_isInputValid(email, password)) {
+      _showDialog('Por favor, preencha todos os campos.');
       return;
     }
 
-    final postResponse = await apiService.post('/login', {
-      'email': email,
-      'password': password,
-    });
+    _showLoading(true);
 
-    if (!postResponse.containsKey("accessToken")) {
-      setState(() {
-        _showErrorDialog();
+    try {
+      final postResponse = await apiService.post('/login', {
+        'email': email,
+        'password': password,
       });
-      //return;
-    } else {
-      globalvariables.setEmail(email);
-      Navigator.pushReplacementNamed(context, '/telaInicial');
+
+      if (_isLoginSuccessful(postResponse)) {
+        await _handleSuccessfulLogin(postResponse["accessToken"], email);
+      } else {
+        _showDialog('E-mail ou senha incorreto. Por favor, tente novamente.');
+      }
+    } catch (e) {
+      print(e);
+      _showDialog(
+        'Erro ao realizar o login. Verifique sua conexão ou tente novamente.',
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      _showLoading(false);
     }
+  }
+
+
+  bool _isLoginSuccessful(Map<String, dynamic> response) {
+    return response.containsKey("accessToken");
+  }
+
+  Future<void> _handleSuccessfulLogin(String token, String email) async {
+    apiService.setAuthToken(token);
+    final user = await apiService.get('/user/$email');
+    Provider.of<GlobalVariables>(context, listen: false).setUser(user);
+    Navigator.pushReplacementNamed(context, '/telaInicial');
+  }
+
+  void _showLoading(bool isLoading) {
+    setState(() {
+      // Use this to show/hide a loading indicator
+    });
+  }
+
+  void _showDialog(String message,
+      {Color backgroundColor = const Color.fromRGBO(0, 20, 137, 1)}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: backgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                message,
+                style: const TextStyle(color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                ),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Color.fromRGBO(0, 20, 137, 1)),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   // Função para exibir o diálogo de "Esqueci minha senha"

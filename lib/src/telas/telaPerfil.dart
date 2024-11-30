@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tela_login/src/services/apiService.dart';
 import '../globalVariables.dart';
 
@@ -9,10 +10,8 @@ class TelaPerfil extends StatefulWidget {
 
 class _TelaPerfilState extends State<TelaPerfil> {
   late Future<Map<String, dynamic>> _dataFuture;
-  final userEmail = globalvariables.getEmail();
 
-  // Fetch data from an API
-  Future<Map<String, dynamic>> fetchData() async {
+  Future<Map<String, dynamic>> fetchData(String userEmail) async {
     final response = await apiService.get('/user/$userEmail');
 
     return response;
@@ -21,7 +20,8 @@ class _TelaPerfilState extends State<TelaPerfil> {
   @override
   void initState() {
     super.initState();
-    _dataFuture = fetchData();
+    final userEmail = Provider.of<GlobalVariables>(context, listen: false).user?["email"];
+    _dataFuture = fetchData(userEmail);
   }
 
   @override
@@ -33,9 +33,12 @@ class _TelaPerfilState extends State<TelaPerfil> {
             future: _dataFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                    child: CircularProgressIndicator()); 
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
+                return Center(
+                    child:
+                        Text('Error: ${snapshot.error}'));
               } else if (snapshot.hasData) {
                 final data = snapshot.data!;
                 return Center(
@@ -60,13 +63,11 @@ class _TelaPerfilState extends State<TelaPerfil> {
                               _buildThickerDivider(),
                               _buildProfileImage(),
                               const SizedBox(height: 16),
-                              _buildProfileItem(
-                                  "Número de registro", data["id"]),
+                             _buildProfileItem("Número de registro", data["id"]),
                               _buildThickerDivider(),
                               _buildProfileItem("Email @metro", data["email"]),
                               _buildThickerDivider(),
-                              _buildProfileItem(
-                                  "Estação", data["stations"][0]["name"]),
+                              _buildProfileItem("Estação", data["stations"][0]["name"]),
                               _buildThickerDivider(),
                               const Spacer(),
                               _buildBackButton(context),
@@ -83,7 +84,7 @@ class _TelaPerfilState extends State<TelaPerfil> {
             }));
   }
 
-  Widget _buildProfileItem(String title, String value) {
+   Widget _buildProfileItem(String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
@@ -144,15 +145,16 @@ class _TelaPerfilState extends State<TelaPerfil> {
   }
 
   Widget _buildGreetingSection(BuildContext context) {
+    final userName = Provider.of<GlobalVariables>(context, listen: false).user?["name"];
     return Stack(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 80.0, top: 8.0, bottom: 8.0),
+        Padding(
+          padding: const EdgeInsets.only(left: 80.0, top: 8.0, bottom: 8.0),
           child: ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(
-              'Olá',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              'Olá $userName',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
         ),

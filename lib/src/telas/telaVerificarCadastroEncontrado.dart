@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../globalVariables.dart';
 
 class TelaVerificarCadastroEncontrado extends StatefulWidget {
@@ -9,11 +10,11 @@ class TelaVerificarCadastroEncontrado extends StatefulWidget {
 
 class _TelaVerificarCadastroEncontradoState
     extends State<TelaVerificarCadastroEncontrado> {
-  final passenger = globalvariables.getPassengerResponse();
+  late Map<String, dynamic> passenger;
   @override
   void initState() {
     super.initState();
-    // Code to be executed when the screen is rendered
+    passenger = Provider.of<GlobalVariables>(context, listen: false).passengerResponse!;
     _onScreenRendered();
   }
 
@@ -49,7 +50,7 @@ class _TelaVerificarCadastroEncontradoState
                 _buildGreetingSection(context),
                 _buildThickerDivider(),
                 SizedBox(height: 10),
-                _buildProfileImage(passenger.image),
+                _buildProfileImage(passenger["image"]),
                 // Conteúdo principal
                 SizedBox(height: 10),
                 _buildNameField(),

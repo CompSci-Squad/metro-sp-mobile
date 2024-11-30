@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../globalVariables.dart';
 
 class TelaInicial extends StatelessWidget {
   const TelaInicial({super.key});
@@ -83,15 +86,17 @@ class TelaInicial extends StatelessWidget {
   }
 
   Widget _buildGreetingSection(BuildContext context) {
+     final user = Provider.of<GlobalVariables>(context).user;
+     print(user);
+  final userName = user != null ? user["name"] ?? "Nome não disponível" : "Nome não disponível";
     return Stack(
       children: [
-        // ListTile que leva a uma nova página ao clicar em qualquer área fora das 3 barrinhas
         Padding(
           padding: const EdgeInsets.only(
-              left: 80.0), // Aumenta o espaçamento para a direita do ícone
+              left: 80.0),
           child: ListTile(
-            title: const Text(
-              'Olá, Nome',
+            title: Text(
+              userName,
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             subtitle: const Text(

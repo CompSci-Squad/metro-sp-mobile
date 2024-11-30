@@ -1,16 +1,26 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
   final String baseUrl;
+  String? _authToken;
 
   ApiService({required this.baseUrl});
 
-  // Common method to handle HTTP requests
+  void setAuthToken(String token) {
+    _authToken = token;
+  }
+
   Future<Map<String, dynamic>> _handleRequest(String url, String method,
       {Map<String, String>? headers, dynamic body}) async {
     Uri uri = Uri.parse('$baseUrl$url');
     http.Response response;
+
+    headers = headers ?? {};
+    if (_authToken != null) {
+      headers['Authorization'] = 'Bearer $_authToken';
+    }
 
     try {
       switch (method.toUpperCase()) {
@@ -42,7 +52,6 @@ class ApiService {
     }
   }
 
-  // Process the response and handle errors
   Map<String, dynamic> _processResponse(http.Response response) {
     final int statusCode = response.statusCode;
 
@@ -53,35 +62,32 @@ class ApiService {
     }
   }
 
-  // Method to make GET request
   Future<Map<String, dynamic>> get(String url,
       {Map<String, String>? headers}) async {
     return _handleRequest(url, 'GET', headers: headers);
   }
 
-  // Method to make POST request
   Future<Map<String, dynamic>> post(String url, dynamic body,
       {Map<String, String>? headers}) async {
     return _handleRequest(url, 'POST', headers: headers, body: body);
   }
 
-  // Method to make PUT request
   Future<Map<String, dynamic>> put(String url, dynamic body,
       {Map<String, String>? headers}) async {
     return _handleRequest(url, 'PUT', headers: headers, body: body);
   }
 
-  // Method to make PATCH request
   Future<Map<String, dynamic>> patch(String url, dynamic body,
       {Map<String, String>? headers}) async {
     return _handleRequest(url, 'PATCH', headers: headers, body: body);
   }
 
-  // Method to make DELETE request
   Future<Map<String, dynamic>> delete(String url,
       {Map<String, String>? headers}) async {
     return _handleRequest(url, 'DELETE', headers: headers);
   }
 }
 
-ApiService apiService = ApiService(baseUrl: "http://localhost:3000");
+String apiUrl = dotenv.env['BASE_API_URL'] ?? 'Default API URL';
+
+ApiService apiService = ApiService(baseUrl: apiUrl);
