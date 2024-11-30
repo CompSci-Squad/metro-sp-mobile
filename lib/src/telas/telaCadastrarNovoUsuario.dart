@@ -15,23 +15,21 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
   final TextEditingController _cpfController = TextEditingController();
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _sobrenomeController = TextEditingController();
- // final TextEditingController _reasonController = TextEditingController();
+  final TextEditingController _reasonController = TextEditingController();
   final TextEditingController _descricaoController = TextEditingController();
-  bool _isLoading = false;
-  String? _errorMessage;
 
   
   Future<void> _submitUser() async {
     final String cpf = _cpfController.text;
     final String nome = _nomeController.text;
     final String sobrenome = _sobrenomeController.text;
-    //final String reason = _reasonController.text;
+    final String reason = _reasonController.text;
     final String descricao = _descricaoController.text;
 
 
     if (cpf.isEmpty || nome.isEmpty || sobrenome.isEmpty || descricao.isEmpty) {
       setState(() {
-        _errorMessage = 'Please enter both username and password.';
+        _showErrorDialog();
       });
       return;
     }
@@ -50,18 +48,16 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
 
     if (!postResponse.containsKey("accessToken")){
       setState(() {
-        //_showErrorDialog();
+        _showErrorDialog();
       });
       //return;
     } else{
       //Navigator.pushReplacementNamed(context,'/telaInicial');
     }
     // Navegar para a próxima tela
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
+    
   }
+
 
 
 
@@ -110,6 +106,48 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
           ],
         ),
       ),
+    );
+  }
+
+
+  void _showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Dados Incompletos',
+                style: TextStyle(color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Fecha o diálogo
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                ),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Color.fromRGBO(0, 20, 137, 1)),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -299,6 +337,7 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
           value: selectedReason,
           items: reasons.map((String reason) {
             return DropdownMenuItem<String>(
+              
               value: reason,
               child: Text(reason, style: TextStyle(color: Colors.white)),
             );
@@ -354,7 +393,49 @@ class _telaCadastrarNovoUsuario extends State<telaCadastrarNovoUsuario>{
     );
   }
 
-  
+  @override
+void initState() {
+  super.initState();
+  _initializeCamera();
+}
+
+Future<void> _initializeCamera() async {
+  cameras = await availableCameras(); // Lista de câmeras disponíveis
+  cameraController = CameraController(
+    cameras[0], // Escolhe a câmera principal
+    ResolutionPreset.medium, // Define a qualidade da câmera
+  );
+
+  await cameraController.initialize(); // Inicializa o controlador
+  if (mounted) {
+    setState(() {}); // Atualiza o estado para renderizar o CameraPreview
+  }
+}
+
+Future<void> _capturePhoto() async {
+  if (!cameraController.value.isInitialized) {
+    return; // Retorna se a câmera não está inicializada
+  }
+
+  try {
+    final XFile image = await cameraController.takePicture(); // Captura a foto
+    print('Foto capturada em: ${image.path}');
+    // Salve o arquivo ou carregue-o para o backend
+  } catch (e) {
+    print('Erro ao capturar a foto: $e');
+  }
+}
+
+@override
+void dispose() {
+  cameraController.dispose(); // Libera os recursos da câmera
+  _cpfController.dispose();
+  _nomeController.dispose();
+  _sobrenomeController.dispose();
+  _descricaoController.dispose();
+  super.dispose();
+}
+
 
 Widget _buildPhotoSection() {
   return Column(
@@ -365,19 +446,26 @@ Widget _buildPhotoSection() {
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
       ),
       SizedBox(height: 10),
+      SizedBox(
+        height: 200,
+        width: double.infinity,
+        child: cameraController.value.isInitialized
+            ? CameraPreview(cameraController) // Mostra a visualização da câmera
+            : Center(child: CircularProgressIndicator()), // Mostra um indicador de carregamento enquanto inicializa
+      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            onPressed: () {
-              // Ação para tirar foto
+            onPressed: () async {
+              await _capturePhoto();
             },
             icon: Icon(Icons.camera_alt, size: 40, color: Colors.black),
           ),
-          SizedBox(width: 100), // Aumenta o espaçamento lateral entre os ícones
+          SizedBox(width: 100),
           IconButton(
             onPressed: () {
-              // Ação para visualizar foto
+              // Exibir foto capturada (implemente a lógica se necessário)
             },
             icon: Icon(Icons.person, size: 40, color: Colors.black),
           ),
@@ -386,6 +474,7 @@ Widget _buildPhotoSection() {
     ],
   );
 }
+
 
 
   Widget _buildSubmitButton() {

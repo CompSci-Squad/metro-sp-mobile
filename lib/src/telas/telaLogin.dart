@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/apiService.dart';
+import '../globalVariables.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -11,9 +12,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false;
 
-
+  
   Future<void> _submitLogin() async {
     final String email = _emailController.text;
     final String password = _passwordController.text;
@@ -31,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
       'password': password,
     });
 
+
     print(postResponse);
 
     if (!postResponse.containsKey("accessToken")){
@@ -39,12 +40,10 @@ class _LoginPageState extends State<LoginPage> {
       });
       //return;
     } else{
-
+      globalvariables.setEmail(email);
       Navigator.pushReplacementNamed(context,'/telaInicial');
+
     }
-    setState(() {
-      _isLoading = true;
-    });
   }
   
   // Função para exibir o diálogo de "Esqueci minha senha"

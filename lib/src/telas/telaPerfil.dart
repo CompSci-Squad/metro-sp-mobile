@@ -1,6 +1,28 @@
 import 'package:flutter/material.dart';
+import '../globalVariables.dart';
 
-class telaPerfil extends StatelessWidget {
+class telaPerfil extends StatefulWidget {
+@override
+  _TelaPerfilState createState() =>
+      _TelaPerfilState();
+}
+class _TelaPerfilState
+    extends State<telaPerfil>{
+
+  final user = globalvariables.getEmail();
+  
+  @override
+  void initState() {
+    super.initState();
+    // Code to be executed when the screen is rendered
+    _onScreenRendered();
+  }
+
+  void _onScreenRendered() {
+    print(user);
+    // You can perform any task here (e.g., fetching data, logging, etc.)
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,13 +50,12 @@ class telaPerfil extends StatelessWidget {
                   _buildThickerDivider(),
                   _buildProfileImage(), // Adiciona a foto de perfil
                   SizedBox(height: 16), // Espaço entre a foto e o próximo item
-                  _buildProfileItem('Número De Registro', 'xxxxxxxxxxxxxxxx'),
+                  _buildProfileItem('Número De Registro',  user[id]),
                   _buildThickerDivider(),
-                  _buildProfileItem('E-mail @metro', 'xxxxxxxxxxxxxxxxxxxx'),
+                  _buildProfileItem('E-mail @metro', user["email"]),
                   _buildThickerDivider(),
-                  _buildProfileItem('Estação', 'xxxxxxxxxxxxxxxx'),
+                  _buildProfileItem('Estação', 'o'/*user['stations']*/),
                   _buildThickerDivider(),
-                  _buildProfileItem('Entrada Responsável', 'xxxxxxxxxxxxxxxxxxxx'),
                   Spacer(),
                   _buildBackButton(context),
                 ],
@@ -91,8 +112,8 @@ class telaPerfil extends StatelessWidget {
           padding: const EdgeInsets.only(left: 80.0, top: 8.0, bottom: 8.0),
           child: ListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text(
-              'Olá, Nome',
+            title: Text(
+              'Olá', /*${user["name"]*/
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),

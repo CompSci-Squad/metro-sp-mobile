@@ -21,8 +21,6 @@ class _TelaVerificarCadastroEncontradoState
     print(passenger);
     // You can perform any task here (e.g., fetching data, logging, etc.)
   }
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +49,7 @@ class _TelaVerificarCadastroEncontradoState
                 _buildGreetingSection(context),
                 _buildThickerDivider(),
                 SizedBox(height: 10),
-                _buildProfileImage(),
+                _buildProfileImage(passenger.image),
                 // Conteúdo principal
                 SizedBox(height: 10),
                 _buildNameField(),
@@ -163,16 +161,21 @@ class _TelaVerificarCadastroEncontradoState
     );
   }
 
-  Widget _buildProfileImage() {
+  Widget _buildProfileImage(String? imageUrl) {
     return Center(
       child: CircleAvatar(
-        radius: 40, // Tamanho do círculo (ajuste conforme necessário)
-        backgroundColor: Colors.grey[300], // Cor de fundo para simular um espaço para foto
-        child: Icon(
-          Icons.person,
-          size: 50, // Ícone de "perfil" dentro do círculo
-          color: Colors.black54,
-        ),
+        radius: 40, // Tamanho do círculo
+        backgroundColor: Colors.grey[300], // Cor de fundo padrão
+        backgroundImage: imageUrl != null && imageUrl.isNotEmpty
+            ? NetworkImage(imageUrl) // Carrega a foto da URL
+            : null, // Nenhuma imagem se a URL for inválida
+        child: imageUrl == null || imageUrl.isEmpty
+            ? Icon(
+                Icons.person,
+                size: 50, // Ícone de "perfil"
+                color: Colors.black54,
+              )
+            : null, // Não mostra ícone se houver imagem
       ),
     );
   }
@@ -188,18 +191,17 @@ class _TelaVerificarCadastroEncontradoState
         SizedBox(
           height: 30,
           child: Container(
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(0, 20, 137, 1),
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: Colors.grey, width: 1),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.centerLeft,
-            child: Text(
-            passenger["name"].split(" ")[0],
-            style: TextStyle(color: Colors.white, fontSize: 14),
-          )
-          ),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(0, 20, 137, 1),
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: Colors.grey, width: 1),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                passenger["name"].split(" ")[0],
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              )),
         ),
       ],
     );
@@ -216,18 +218,18 @@ class _TelaVerificarCadastroEncontradoState
         SizedBox(
           height: 30,
           child: Container(
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(0, 20, 137, 1),
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: Colors.grey, width: 1),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.centerLeft,
-            child: Text(
-            passenger["name"].split(" ")[1], // O texto que será exibido, vindo do backend
-            style: TextStyle(color: Colors.white, fontSize: 14),
-          )
-          ),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(0, 20, 137, 1),
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: Colors.grey, width: 1),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                passenger["name"].split(
+                    " ")[1], // O texto que será exibido, vindo do backend
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              )),
         ),
       ],
     );
@@ -244,18 +246,17 @@ class _TelaVerificarCadastroEncontradoState
         SizedBox(
           height: 30,
           child: Container(
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(0, 20, 137, 1),
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: Colors.grey, width: 1),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.centerLeft,
-            child: Text(
-            passenger["cpf"],
-            style: TextStyle(color: Colors.white, fontSize: 14),
-          )
-          ),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(0, 20, 137, 1),
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: Colors.grey, width: 1),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                passenger["cpf"],
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              )),
         ),
       ],
     );
@@ -272,18 +273,17 @@ class _TelaVerificarCadastroEncontradoState
         SizedBox(
           height: 30,
           child: Container(
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(0, 20, 137, 1),
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: Colors.grey, width: 1),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.centerLeft,
-            child: Text(
-            passenger['justificationType'], 
-            style: TextStyle(color: Colors.white, fontSize: 14),
-          )
-          ),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(0, 20, 137, 1),
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: Colors.grey, width: 1),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                passenger['justificationType'],
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              )),
         ),
       ],
     );
@@ -300,18 +300,17 @@ class _TelaVerificarCadastroEncontradoState
         SizedBox(
           height: 30,
           child: Container(
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(0, 20, 137, 1),
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: Colors.grey, width: 1),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.centerLeft,
-            child: Text(
-            passenger['justificationDetails'], 
-            style: TextStyle(color: Colors.white, fontSize: 14),
-          )
-          ),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(0, 20, 137, 1),
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: Colors.grey, width: 1),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                passenger['justificationDetails'],
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              )),
         ),
       ],
     );
