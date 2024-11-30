@@ -26,15 +26,15 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
     print('CPF: $cpf');
     final passenger = await apiService.get("/passenger/cpf/$cpf");
 
-
-    if (!passenger.containsValue(cpf)){
+    if (!passenger.containsValue(cpf)) {
       setState(() {
         _showErrorDialog();
       });
       //return;
-    } else{
+    } else {
       globalvariables.setPassengerResponse(passenger);
-      Navigator.pushReplacementNamed(context,'/telaVerificarCadastroEncontrado');
+      Navigator.pushReplacementNamed(
+          context, '/telaVerificarCadastroEncontrado');
     }
     // Navegar para a próxima tela
     //Navigator.pushNamed(context, '/telaInicial');
@@ -42,8 +42,6 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
       _isLoading = true;
     });
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +72,7 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
                       _errorMessage!,
                       style: TextStyle(color: Colors.red),
                     ),
-                  if (_isLoading)
-                    Center(child: CircularProgressIndicator()),
+                  if (_isLoading) Center(child: CircularProgressIndicator()),
                   _buildOperationButtons(context),
                   Spacer(),
                   _buildBackButton(context),
@@ -87,7 +84,6 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
       ),
     );
   }
-
 
   void _showErrorDialog() {
     showDialog(
@@ -116,7 +112,8 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                 ),
                 child: const Text(
                   'OK',
@@ -129,7 +126,6 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
       },
     );
   }
-
 
   Drawer buildAppDrawer(BuildContext context) {
     return Drawer(
@@ -149,7 +145,8 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
             ),
           ),
           _buildDrawerItem('Cadastrar Novo Usuário', () {
-            Navigator.pushReplacementNamed(context, '/telaCadastrarNovoUsuario');
+            Navigator.pushReplacementNamed(
+                context, '/telaCadastrarNovoUsuario');
           }),
           _buildDrawerItem('Verificar Cadastro Usuário', () {
             Navigator.pushReplacementNamed(context, '/telaVerificarCadastro');
@@ -159,7 +156,8 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
     );
   }
 
-  ListTile _buildDrawerItem(String title, VoidCallback onTap, {Color? textColor}) {
+  ListTile _buildDrawerItem(String title, VoidCallback onTap,
+      {Color? textColor}) {
     return ListTile(
       title: Text(
         title,

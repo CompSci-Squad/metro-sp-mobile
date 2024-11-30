@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/apiService.dart';
 import '../globalVariables.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -13,7 +14,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  
   Future<void> _submitLogin() async {
     final String email = _emailController.text;
     final String password = _passwordController.text;
@@ -24,28 +24,23 @@ class _LoginPageState extends State<LoginPage> {
       });
       return;
     }
-    print('E-mail: $email');
-    print('Senha: $password');
+
     final postResponse = await apiService.post('/login', {
       'email': email,
       'password': password,
     });
 
-
-    print(postResponse);
-
-    if (!postResponse.containsKey("accessToken")){
+    if (!postResponse.containsKey("accessToken")) {
       setState(() {
         _showErrorDialog();
       });
       //return;
-    } else{
+    } else {
       globalvariables.setEmail(email);
-      Navigator.pushReplacementNamed(context,'/telaInicial');
-
+      Navigator.pushReplacementNamed(context, '/telaInicial');
     }
   }
-  
+
   // Função para exibir o diálogo de "Esqueci minha senha"
   void _showForgotPasswordDialog() {
     showDialog(
@@ -74,7 +69,8 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                 ),
                 child: const Text(
                   'OK',
@@ -115,7 +111,8 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                 ),
                 child: const Text(
                   'OK',
@@ -283,7 +280,6 @@ class _LoginPageState extends State<LoginPage> {
         child: ElevatedButton(
           onPressed: () {
             _submitLogin();
-
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
