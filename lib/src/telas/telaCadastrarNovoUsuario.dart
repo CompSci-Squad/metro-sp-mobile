@@ -446,26 +446,22 @@ Widget _buildPhotoSection() {
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
       ),
       SizedBox(height: 10),
-      SizedBox(
-        height: 200,
-        width: double.infinity,
-        child: cameraController.value.isInitialized
-            ? CameraPreview(cameraController) // Mostra a visualização da câmera
-            : Center(child: CircularProgressIndicator()), // Mostra um indicador de carregamento enquanto inicializa
-      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
             onPressed: () async {
-              await _capturePhoto();
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CameraFullScreenPage(cameraController: cameraController)),
+              );
             },
             icon: Icon(Icons.camera_alt, size: 40, color: Colors.black),
           ),
           SizedBox(width: 100),
           IconButton(
             onPressed: () {
-              // Exibir foto capturada (implemente a lógica se necessário)
+              // Ação para visualizar foto (implemente a lógica se necessário)
             },
             icon: Icon(Icons.person, size: 40, color: Colors.black),
           ),
@@ -474,6 +470,8 @@ Widget _buildPhotoSection() {
     ],
   );
 }
+
+
 
 
 
@@ -513,3 +511,51 @@ Widget _buildPhotoSection() {
     );
   }
 }
+
+class CameraFullScreenPage extends StatelessWidget {
+  final CameraController cameraController;
+
+  CameraFullScreenPage({required this.cameraController});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          cameraController.value.isInitialized
+              ? CameraPreview(cameraController)
+              : Center(child: CircularProgressIndicator()),
+          Positioned(
+            top: 40,
+            left: 16,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white, size: 30),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 40,
+            right: 16,
+            child: FloatingActionButton(
+              backgroundColor: Colors.blue,
+              onPressed: () async {
+                try {
+                  final XFile image = await cameraController.takePicture();
+                  print('Foto capturada: ${image.path}');
+                  // Você pode usar o caminho da imagem aqui
+                  Navigator.pop(context); // Retorna à tela anterior após capturar a foto
+                } catch (e) {
+                  print('Erro ao capturar a foto: $e');
+                }
+              },
+              child: Icon(Icons.camera, size: 30),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

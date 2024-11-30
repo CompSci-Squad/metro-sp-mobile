@@ -53,7 +53,7 @@ class _TelaPerfilState
                   SizedBox(height: 16), // Espaço entre a foto e o próximo item
                   _buildProfileItem('Número De Registro',  user["id"]),
                   _buildThickerDivider(),
-                  _buildProfileItem('E-mail @metro', user["email"]),
+                  _buildProfileItem('E-mail @metro', ''),
                   _buildThickerDivider(),
                   _buildProfileItem('Estação', user["stations"]),
                   _buildThickerDivider(),
