@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/apiService.dart';
-import '../globalVariables.dart';
+import '../shared/services/apiService.dart';
+import '../shared/global/globalVariables.dart';
 
 class TelaVerificarCadastro extends StatefulWidget {
   @override
@@ -33,7 +33,8 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
       });
       //return;
     } else {
-      Provider.of<GlobalVariables>(context, listen: false).setPassengerResponse(passenger);
+      Provider.of<GlobalVariables>(context, listen: false)
+          .setPassengerResponse(passenger);
       Navigator.pushReplacementNamed(
           context, '/telaVerificarCadastroEncontrado');
     }

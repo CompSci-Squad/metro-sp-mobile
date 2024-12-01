@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../globalVariables.dart';
+import '../shared/global/globalVariables.dart';
 
 class TelaInicial extends StatelessWidget {
   const TelaInicial({super.key});
@@ -86,14 +86,15 @@ class TelaInicial extends StatelessWidget {
   }
 
   Widget _buildGreetingSection(BuildContext context) {
-     final user = Provider.of<GlobalVariables>(context).user;
-     print(user);
-  final userName = user != null ? user["name"] ?? "Nome não disponível" : "Nome não disponível";
+    final user = Provider.of<GlobalVariables>(context).user;
+    print(user);
+    final userName = user != null
+        ? user["name"] ?? "Nome não disponível"
+        : "Nome não disponível";
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.only(
-              left: 80.0),
+          padding: const EdgeInsets.only(left: 80.0),
           child: ListTile(
             title: Text(
               userName,

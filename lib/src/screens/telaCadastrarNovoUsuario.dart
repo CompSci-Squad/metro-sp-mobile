@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import '../services/apiService.dart';
+import '../shared/enums/justification_enum.dart';
+import '../shared/services/apiService.dart';
 import 'package:camera/camera.dart';
+
+import '../shared/utils/justification_map.dart';
 
 class TelaCadastrarNovoUsuario extends StatefulWidget {
   const TelaCadastrarNovoUsuario({super.key});
@@ -10,52 +13,79 @@ class TelaCadastrarNovoUsuario extends StatefulWidget {
 }
 
 class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
-  final List<String> reasons = ["Idade", "P.C.D.", "Desempregado", "Policial"];
-  String? selectedReason;
+  JustificationType? selectedReason;
+  XFile? capturedImage;
   late List<CameraDescription> cameras;
   late CameraController cameraController;
   final TextEditingController _cpfController = TextEditingController();
-  final TextEditingController _nomeController = TextEditingController();
-  final TextEditingController _sobrenomeController = TextEditingController();
-  final TextEditingController _reasonController = TextEditingController();
-  final TextEditingController _descricaoController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _surnameController = TextEditingController();
+  final TextEditingController _justificationDetailsController =
+      TextEditingController();
+
+  void handleImageCaptured(XFile image) {
+    capturedImage = image;
+  }
 
   Future<void> _submitUser() async {
-    final String cpf = _cpfController.text;
-    final String nome = _nomeController.text;
-    final String sobrenome = _sobrenomeController.text;
-    final String reason = _reasonController.text;
-    final String descricao = _descricaoController.text;
+    final String cpf = _cpfController.text.trim();
+    final String name = _nameController.text.trim();
+    final String surname = _surnameController.text.trim();
+    final String justificationDetails =
+        _justificationDetailsController.text.trim();
+    final String? reasonValue = selectedReason?.toString().split('.').last;
 
-    if (cpf.isEmpty || nome.isEmpty || sobrenome.isEmpty || descricao.isEmpty) {
+    if (!_isValidInput(cpf, name, surname, justificationDetails, reasonValue)) {
       setState(() {
         _showErrorDialog();
       });
       return;
     }
-    print('CPF: $cpf');
-    print('Nome: $nome');
-    print('Sobrenome: $sobrenome');
-    print('Descrição: $descricao');
 
-    final postResponse = await apiService.post('/login', {
-      'CPF': cpf,
-      'Nome': nome,
-      'Sobrenome': sobrenome,
-      'Descrição': descricao,
-    });
-    print(postResponse);
+    print(capturedImage);
 
-    if (!postResponse.containsKey("accessToken")) {
+    if (capturedImage?.name == null) {
       setState(() {
-        _showErrorDialog();
+        _showErrorDialog(message: "Por favor, capture uma imagem.");
       });
-      //return;
-    } else {
-      //Navigator.pushReplacementNamed(context,'/telaInicial');
+      return;
     }
-    // Navegar para a próxima tela
+
+    try {
+      await apiService.sendMultipartFormData(
+        url: '/passenger',
+        fields: {
+          'cpf': cpf,
+          'name': '$name $surname',
+          'justificationType': reasonValue ?? "",
+          'justificationDetails': justificationDetails,
+        },
+        file: capturedImage!,
+        fileFieldName: "file",
+      );
+
+      _showSuccessDialog(message: "Passageiro criado com sucesso");
+      Navigator.pushReplacementNamed(context, '/telaInicial');
+    } catch (e) {
+      print(e);
+      setState(() {
+        _showErrorDialog(
+            message: "Erro ao realizar o cadastro. Tente novamente.");
+      });
+    }
   }
+
+// Helper function for input validation
+  bool _isValidInput(String cpf, String name, String surname,
+      String justificationDetails, String? reasonValue) {
+    return cpf.isNotEmpty &&
+        name.isNotEmpty &&
+        surname.isNotEmpty &&
+        justificationDetails.isNotEmpty &&
+        reasonValue?.isNotEmpty == true;
+  }
+
+  // Navegar para a próxima tela
 
   @override
   Widget build(BuildContext context) {
@@ -84,17 +114,17 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
                   _buildGreetingSection(context),
                   _buildThickerDivider(),
                   _buildCPFField(),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   _buildNameField(),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   _buildSurnameField(),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   _buildReasonField(),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   _buildRightField(),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   _buildPhotoSection(),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   _buildSubmitButton(),
                 ],
               ),
@@ -106,7 +136,7 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
     );
   }
 
-  void _showErrorDialog() {
+  void _showErrorDialog({String message = 'Dados Incompletos'}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -115,33 +145,96 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Dados Incompletos',
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Fecha o diálogo
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+          content: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  textAlign: TextAlign.center,
                 ),
-                child: const Text(
-                  'OK',
-                  style: TextStyle(color: Color.fromRGBO(0, 20, 137, 1)),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                  ),
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(
+                      color: Color.fromRGBO(0, 20, 137, 1),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSuccessDialog(
+      {String message = 'Operação concluída com sucesso!'}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromRGBO(0, 20, 137, 1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                  ),
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(
+                      color: Color.fromRGBO(0, 20, 137, 1),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -191,11 +284,11 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
   Widget _buildGreetingSection(BuildContext context) {
     return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 80.0, top: 8.0, bottom: 8.0),
+        const Padding(
+          padding: EdgeInsets.only(left: 80.0, top: 8.0, bottom: 8.0),
           child: ListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text(
+            title: Text(
               'Cadastro de Novos Usuários',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
@@ -232,7 +325,7 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Digite o C.F.P. Do Usuário',
           style: TextStyle(fontSize: 12),
         ),
@@ -245,13 +338,13 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
             decoration: InputDecoration(
               hintText: '***.***.***-**',
               filled: true,
-              fillColor: Color.fromRGBO(0, 20, 137, 1),
-              hintStyle: TextStyle(color: Colors.white),
+              fillColor: const Color.fromRGBO(0, 20, 137, 1),
+              hintStyle: const TextStyle(color: Colors.white),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
             ),
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
             keyboardType: TextInputType.number,
           ),
         ),
@@ -263,7 +356,7 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Digite O Nome do Usuário',
           style: TextStyle(fontSize: 12),
         ),
@@ -271,18 +364,18 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
         SizedBox(
             height: 30,
             child: TextField(
-              controller: _nomeController,
+              controller: _nameController,
               obscureText: false,
               decoration: InputDecoration(
                 hintText: '_______',
                 filled: true,
-                fillColor: Color.fromRGBO(0, 20, 137, 1),
-                hintStyle: TextStyle(color: Colors.white),
+                fillColor: const Color.fromRGBO(0, 20, 137, 1),
+                hintStyle: const TextStyle(color: Colors.white),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
               keyboardType: TextInputType.text,
             )),
       ],
@@ -293,26 +386,25 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Digite o Sobrenome Do Usuário',
           style: TextStyle(fontSize: 12),
         ),
-        //SizedBox(height: 10),
         SizedBox(
           height: 30,
           child: TextField(
-            controller: _sobrenomeController,
+            controller: _surnameController,
             obscureText: false,
             decoration: InputDecoration(
               hintText: '_______',
               filled: true,
-              fillColor: Color.fromRGBO(0, 20, 137, 1),
-              hintStyle: TextStyle(color: Colors.white),
+              fillColor: const Color.fromRGBO(0, 20, 137, 1),
+              hintStyle: const TextStyle(color: Colors.white),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
             ),
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
             keyboardType: TextInputType.number,
           ),
         )
@@ -324,32 +416,39 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Selecione O Motivo da Gratuidade',
           style: TextStyle(fontSize: 12),
         ),
-        SizedBox(height: 10),
-        DropdownButtonFormField<String>(
+        const SizedBox(height: 10),
+        DropdownButtonFormField<JustificationType>(
           value: selectedReason,
-          items: reasons.map((String reason) {
-            return DropdownMenuItem<String>(
+          items: JustificationType.values.map((JustificationType reason) {
+            return DropdownMenuItem<JustificationType>(
               value: reason,
-              child: Text(reason, style: TextStyle(color: Colors.white)),
+              child: Text(
+                justificationTypeTranslations[reason] ?? 'Unknown',
+                style: const TextStyle(color: Colors.white),
+              ),
             );
           }).toList(),
-          onChanged: (String? newValue) {
-            selectedReason = newValue;
+          onChanged: (JustificationType? newValue) {
+            setState(() {
+              selectedReason =
+                  newValue; // Ensure selectedReason is updated correctly
+            });
           },
           decoration: InputDecoration(
             filled: true,
-            fillColor: Color.fromRGBO(0, 20, 137, 1),
+            fillColor: const Color.fromRGBO(0, 20, 137, 1),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           ),
-          style: TextStyle(color: Colors.white), // Estilo do texto selecionado
-          dropdownColor: Color.fromRGBO(0, 20, 137, 1), // Cor do menu suspenso
+          style: const TextStyle(color: Colors.white),
+          dropdownColor: const Color.fromRGBO(0, 20, 137, 1),
         ),
       ],
     );
@@ -359,7 +458,7 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Digite direitoGratuidade',
           style: TextStyle(fontSize: 12),
         ),
@@ -367,18 +466,18 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
         SizedBox(
           height: 30,
           child: TextField(
-            controller: _descricaoController,
+            controller: _justificationDetailsController,
             obscureText: false,
             decoration: InputDecoration(
               hintText: '',
               filled: true,
-              fillColor: Color.fromRGBO(0, 20, 137, 1),
-              hintStyle: TextStyle(color: Colors.white),
+              fillColor: const Color.fromRGBO(0, 20, 137, 1),
+              hintStyle: const TextStyle(color: Colors.white),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
             ),
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
             keyboardType: TextInputType.number,
           ),
         )
@@ -424,9 +523,9 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
   void dispose() {
     cameraController.dispose(); // Libera os recursos da câmera
     _cpfController.dispose();
-    _nomeController.dispose();
-    _sobrenomeController.dispose();
-    _descricaoController.dispose();
+    _nameController.dispose();
+    _surnameController.dispose();
+    _justificationDetailsController.dispose();
     super.dispose();
   }
 
@@ -434,31 +533,47 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Fotografe o Usuário',
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
               onPressed: () async {
-                await Navigator.push(
+                // Navigate to CameraFullScreenPage and capture the image
+                final XFile? image = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CameraFullScreenPage(
-                          cameraController: cameraController)),
+                    builder: (context) => CameraFullScreenPage(
+                      cameraController: cameraController,
+                      onImageCaptured: handleImageCaptured,
+                    ),
+                  ),
                 );
+                // If a photo was taken, store it in the class variable
+                if (image != null) {
+                  setState(() {
+                    capturedImage = image; // Store the captured image
+                  });
+                }
               },
-              icon: Icon(Icons.camera_alt, size: 40, color: Colors.black),
+              icon: const Icon(Icons.camera_alt, size: 40, color: Colors.black),
             ),
-            SizedBox(width: 100),
+            const SizedBox(width: 100),
             IconButton(
               onPressed: () {
-                // Ação para visualizar foto (implemente a lógica se necessário)
+                if (capturedImage != null) {
+                  // Display the captured image or use it
+                  print("Captured Image Path: ${capturedImage!.path}");
+                } else {
+                  // Handle case when no photo has been taken yet
+                  print("No image captured yet");
+                }
               },
-              icon: Icon(Icons.person, size: 40, color: Colors.black),
+              icon: const Icon(Icons.person, size: 40, color: Colors.black),
             ),
           ],
         ),
@@ -481,7 +596,7 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
               borderRadius: BorderRadius.circular(5),
             ),
           ),
-          child: Text(
+          child: const Text(
             'Cadastrar',
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
@@ -505,47 +620,50 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
 
 class CameraFullScreenPage extends StatelessWidget {
   final CameraController cameraController;
+  final Function(XFile) onImageCaptured;
 
-  CameraFullScreenPage({required this.cameraController});
+  CameraFullScreenPage(
+      {required this.cameraController, required this.onImageCaptured});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          cameraController.value.isInitialized
-              ? CameraPreview(cameraController)
-              : Center(child: CircularProgressIndicator()),
-          Positioned(
-            top: 40,
-            left: 16,
-            child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white, size: 30),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+      body: SafeArea(
+        child: Stack(
+          children: [
+            cameraController.value.isInitialized
+                ? CameraPreview(cameraController) // Full screen camera preview
+                : const Center(child: CircularProgressIndicator()),
+            Positioned(
+              top: 40,
+              left: 16,
+              child: IconButton(
+                icon:
+                    const Icon(Icons.arrow_back, color: Colors.white, size: 30),
+                onPressed: () {
+                  Navigator.pop(context); // Navigate back
+                },
+              ),
             ),
-          ),
-          Positioned(
-            bottom: 40,
-            right: 16,
-            child: FloatingActionButton(
-              backgroundColor: Colors.blue,
-              onPressed: () async {
-                try {
-                  final XFile image = await cameraController.takePicture();
-                  print('Foto capturada: ${image.path}');
-                  // Você pode usar o caminho da imagem aqui
-                  Navigator.pop(
-                      context); // Retorna à tela anterior após capturar a foto
-                } catch (e) {
-                  print('Erro ao capturar a foto: $e');
-                }
-              },
-              child: Icon(Icons.camera, size: 30),
+            Positioned(
+              bottom: 40,
+              right: 16,
+              child: FloatingActionButton(
+                backgroundColor: Colors.blue,
+                onPressed: () async {
+                  try {
+                    final XFile image = await cameraController.takePicture();
+                    onImageCaptured(image);
+                    Navigator.pop(context);
+                  } catch (e) {
+                    print('Erro ao capturar a foto: $e');
+                  }
+                },
+                child: const Icon(Icons.camera, size: 30),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

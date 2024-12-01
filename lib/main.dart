@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'src/globalVariables.dart';
-import 'src/telas/telaCadastrarNovoUsuario.dart';
-import 'src/telas/telaPerfil.dart';
-import 'src/telas/telaVerificarCadastro.dart';
-import 'src/telas/telaVerificarCadastroEncontrado.dart';
-import 'src/telas/telaLogin.dart';
-import 'src/telas/telaInicial.dart';
+import 'src/shared/global/globalVariables.dart';
+import 'src/screens/telaCadastrarNovoUsuario.dart';
+import 'src/screens/telaPerfil.dart';
+import 'src/screens/telaVerificarCadastro.dart';
+import 'src/screens/telaVerificarCadastroEncontrado.dart';
+import 'src/screens/telaLogin.dart';
+import 'src/screens/telaInicial.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => GlobalVariables(),
-      child: MyApp(),
-    ));
+  runApp(ChangeNotifierProvider(
+    create: (_) => GlobalVariables(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -28,7 +27,8 @@ class MyApp extends StatelessWidget {
         '/telaInicial': (context) => const TelaInicial(),
         '/telaVerificarCadastro': (context) => TelaVerificarCadastro(),
         '/telaPerfil': (context) => TelaPerfil(),
-        //'/telaCadastrarNovoUsuario': (context) => const TelaCadastrarNovoUsuario(),
+        '/telaCadastrarNovoUsuario': (context) =>
+            const TelaCadastrarNovoUsuario(),
         '/telaVerificarCadastroEncontrado': (context) =>
             TelaVerificarCadastroEncontrado(),
         // Adicione mais rotas aqui conforme criar novas telas

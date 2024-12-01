@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../globalVariables.dart';
+import '../shared/global/globalVariables.dart';
 
 class TelaVerificarCadastroEncontrado extends StatefulWidget {
   @override
@@ -14,7 +14,8 @@ class _TelaVerificarCadastroEncontradoState
   @override
   void initState() {
     super.initState();
-    passenger = Provider.of<GlobalVariables>(context, listen: false).passengerResponse!;
+    passenger =
+        Provider.of<GlobalVariables>(context, listen: false).passengerResponse!;
     _onScreenRendered();
   }
 

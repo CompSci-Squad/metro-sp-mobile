@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GlobalVariables with ChangeNotifier {
-  Map<String, dynamic>?_user;
+  Map<String, dynamic>? _user;
   Map<String, dynamic>? _passengerResponse;
 
   Map<String, dynamic>? get user => _user;

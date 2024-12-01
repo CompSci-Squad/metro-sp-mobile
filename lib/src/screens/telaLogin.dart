@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/apiService.dart';
-import '../globalVariables.dart';
+import '../shared/services/apiService.dart';
+import '../shared/global/globalVariables.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -51,7 +51,6 @@ class _LoginPageState extends State<LoginPage> {
       _showLoading(false);
     }
   }
-
 
   bool _isLoginSuccessful(Map<String, dynamic> response) {
     return response.containsKey("accessToken");
