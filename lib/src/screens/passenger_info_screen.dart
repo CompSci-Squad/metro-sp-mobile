@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../shared/global/globalVariables.dart';
 
-class TelaVerificarCadastroEncontrado extends StatefulWidget {
+class PassengerInfoScreen extends StatefulWidget {
   @override
-  _TelaVerificarCadastroEncontradoState createState() =>
-      _TelaVerificarCadastroEncontradoState();
+  _PassengerInfoScreenState createState() =>
+      _PassengerInfoScreenState();
 }
 
-class _TelaVerificarCadastroEncontradoState
-    extends State<TelaVerificarCadastroEncontrado> {
+class _PassengerInfoScreenState
+    extends State<PassengerInfoScreen> {
   late Map<String, dynamic> passenger;
   @override
   void initState() {

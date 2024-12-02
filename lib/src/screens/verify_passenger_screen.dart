@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 import '../shared/services/apiService.dart';
 import '../shared/global/globalVariables.dart';
 
-class TelaVerificarCadastro extends StatefulWidget {
+class VerifyPassengerScreen extends StatefulWidget {
   @override
-  _TelaVerificarCadastroState createState() => _TelaVerificarCadastroState();
+  _VerifyPassengerScreenState createState() => _VerifyPassengerScreenState();
 }
 
-class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
+class _VerifyPassengerScreenState extends State<VerifyPassengerScreen> {
   final TextEditingController _cpfController = TextEditingController();
 
   bool _isLoading = false;
@@ -24,7 +24,6 @@ class _TelaVerificarCadastroState extends State<TelaVerificarCadastro> {
       return;
     }
 
-    print('CPF: $cpf');
     final passenger = await apiService.get("/passenger/cpf/$cpf");
 
     if (!passenger.containsValue(cpf)) {

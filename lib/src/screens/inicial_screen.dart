@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../shared/global/globalVariables.dart';
 
-class TelaInicial extends StatelessWidget {
-  const TelaInicial({super.key});
+class InicialScreen extends StatelessWidget {
+  const InicialScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,6 @@ class TelaInicial extends StatelessWidget {
 
   Widget _buildGreetingSection(BuildContext context) {
     final user = Provider.of<GlobalVariables>(context).user;
-    print(user);
     final userName = user != null
         ? user["name"] ?? "Nome não disponível"
         : "Nome não disponível";
@@ -98,7 +97,7 @@ class TelaInicial extends StatelessWidget {
           child: ListTile(
             title: Text(
               userName,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             subtitle: const Text(
               'Verifique suas informações aqui',

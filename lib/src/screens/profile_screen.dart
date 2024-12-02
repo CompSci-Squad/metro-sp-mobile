@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 import '../shared/services/apiService.dart';
 import '../shared/global/globalVariables.dart';
 
-class TelaPerfil extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
   @override
-  _TelaPerfilState createState() => _TelaPerfilState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _TelaPerfilState extends State<TelaPerfil> {
+class _ProfileScreenState extends State<ProfileScreen> {
   late Future<Map<String, dynamic>> _dataFuture;
 
   Future<Map<String, dynamic>> fetchData(String userEmail) async {

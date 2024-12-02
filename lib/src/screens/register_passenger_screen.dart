@@ -5,16 +5,17 @@ import 'package:camera/camera.dart';
 
 import '../shared/utils/justification_map.dart';
 
-class TelaCadastrarNovoUsuario extends StatefulWidget {
-  const TelaCadastrarNovoUsuario({super.key});
+class RegisterPassengerScreen extends StatefulWidget {
+  const RegisterPassengerScreen({super.key});
 
   @override
-  _TelaCadastrarNovoUsuario createState() => _TelaCadastrarNovoUsuario();
+  _RegisterPassengerScreen createState() => _RegisterPassengerScreen();
 }
 
-class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
+class _RegisterPassengerScreen extends State<RegisterPassengerScreen> {
   JustificationType? selectedReason;
   XFile? capturedImage;
+  late String justificationText = "";
   late List<CameraDescription> cameras;
   late CameraController cameraController;
   final TextEditingController _cpfController = TextEditingController();
@@ -41,8 +42,6 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
       });
       return;
     }
-
-    print(capturedImage);
 
     if (capturedImage?.name == null) {
       setState(() {
@@ -326,27 +325,24 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Digite o C.F.P. Do Usuário',
+          'Digite o C.P.F do usuário',
           style: TextStyle(fontSize: 12),
         ),
-        //SizedBox(height: 10),
-        SizedBox(
-          height: 30,
-          child: TextField(
-            controller: _cpfController,
-            obscureText: false,
-            decoration: InputDecoration(
-              hintText: '***.***.***-**',
-              filled: true,
-              fillColor: const Color.fromRGBO(0, 20, 137, 1),
-              hintStyle: const TextStyle(color: Colors.white),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
+        const SizedBox(height: 5),
+        TextField(
+          controller: _cpfController,
+          obscureText: false,
+          decoration: InputDecoration(
+            hintText: '***.***.***-**',
+            filled: true,
+            fillColor: const Color.fromRGBO(0, 20, 137, 1),
+            hintStyle: const TextStyle(color: Colors.white),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
             ),
-            style: const TextStyle(color: Colors.white),
-            keyboardType: TextInputType.number,
           ),
+          style: const TextStyle(color: Colors.white),
+          keyboardType: TextInputType.number,
         ),
       ],
     );
@@ -357,27 +353,25 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Digite O Nome do Usuário',
+          'Digite O nome do usuário',
           style: TextStyle(fontSize: 12),
         ),
-        //SizedBox(height: 10),
-        SizedBox(
-            height: 30,
-            child: TextField(
-              controller: _nameController,
-              obscureText: false,
-              decoration: InputDecoration(
-                hintText: '_______',
-                filled: true,
-                fillColor: const Color.fromRGBO(0, 20, 137, 1),
-                hintStyle: const TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
-              keyboardType: TextInputType.text,
-            )),
+        const SizedBox(height: 10),
+        TextField(
+          controller: _nameController,
+          obscureText: false,
+          decoration: InputDecoration(
+            hintText: '_______',
+            filled: true,
+            fillColor: const Color.fromRGBO(0, 20, 137, 1),
+            hintStyle: const TextStyle(color: Colors.white),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+          style: const TextStyle(color: Colors.white),
+          keyboardType: TextInputType.text,
+        )
       ],
     );
   }
@@ -387,27 +381,25 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Digite o Sobrenome Do Usuário',
+          'Digite o sobrenome do usuário',
           style: TextStyle(fontSize: 12),
         ),
-        SizedBox(
-          height: 30,
-          child: TextField(
-            controller: _surnameController,
-            obscureText: false,
-            decoration: InputDecoration(
-              hintText: '_______',
-              filled: true,
-              fillColor: const Color.fromRGBO(0, 20, 137, 1),
-              hintStyle: const TextStyle(color: Colors.white),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: _surnameController,
+          obscureText: false,
+          decoration: InputDecoration(
+            hintText: '_______',
+            filled: true,
+            fillColor: const Color.fromRGBO(0, 20, 137, 1),
+            hintStyle: const TextStyle(color: Colors.white),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
             ),
-            style: const TextStyle(color: Colors.white),
-            keyboardType: TextInputType.number,
           ),
-        )
+          style: const TextStyle(color: Colors.white),
+          keyboardType: TextInputType.number,
+        ),
       ],
     );
   }
@@ -417,7 +409,7 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Selecione O Motivo da Gratuidade',
+          'Selecione O motivo da gratuidade',
           style: TextStyle(fontSize: 12),
         ),
         const SizedBox(height: 10),
@@ -434,8 +426,23 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
           }).toList(),
           onChanged: (JustificationType? newValue) {
             setState(() {
-              selectedReason =
-                  newValue; // Ensure selectedReason is updated correctly
+              selectedReason = newValue;
+              switch (selectedReason) {
+                case JustificationType.AGE:
+                  justificationText = 'Digite a sua data de nascimento (ano-mês-dia)';
+                  break;
+                case JustificationType.UNEMPLOYED:
+                  justificationText = 'Digite seu numero de cadastro';
+                  break;
+                case JustificationType.POLICEOFFICER:
+                  justificationText = 'Digite seu código da funcional';
+                  break;
+                case JustificationType.PCD:
+                  justificationText = 'Digite o motivo';
+                  break;
+                default:
+                  justificationText = 'Please select a justification type.';
+              }
             });
           },
           decoration: InputDecoration(
@@ -458,29 +465,26 @@ class _TelaCadastrarNovoUsuario extends State<TelaCadastrarNovoUsuario> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Digite direitoGratuidade',
-          style: TextStyle(fontSize: 12),
+        Text(
+          justificationText,
+          style: const TextStyle(fontSize: 12),
         ),
-        //SizedBox(height: 10),
-        SizedBox(
-          height: 30,
-          child: TextField(
-            controller: _justificationDetailsController,
-            obscureText: false,
-            decoration: InputDecoration(
-              hintText: '',
-              filled: true,
-              fillColor: const Color.fromRGBO(0, 20, 137, 1),
-              hintStyle: const TextStyle(color: Colors.white),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: _justificationDetailsController,
+          obscureText: false,
+          decoration: InputDecoration(
+            hintText: '',
+            filled: true,
+            fillColor: const Color.fromRGBO(0, 20, 137, 1),
+            hintStyle: const TextStyle(color: Colors.white),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
             ),
-            style: const TextStyle(color: Colors.white),
-            keyboardType: TextInputType.number,
           ),
-        )
+          style: const TextStyle(color: Colors.white),
+          keyboardType: TextInputType.number,
+        ),
       ],
     );
   }
