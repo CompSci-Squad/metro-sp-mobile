@@ -64,12 +64,6 @@ class _PassengerInfoScreenState
                 SizedBox(height: 5),
                 _buildRightField(),
                 SizedBox(height: 20),
-
-                // Botão Voltar
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: _buildBackButton(context),
-                ),
               ],
             ),
           ),
@@ -141,13 +135,12 @@ class _PassengerInfoScreenState
           child: Builder(
             builder: (context) => IconButton(
               icon: const Icon(
-                Icons.menu,
+                Icons.arrow_back,
                 size: 43, // Tamanho do ícone
                 color: Colors.black,
               ),
               onPressed: () {
-                Scaffold.of(context)
-                    .openDrawer(); // Abre o Drawer ao clicar nas três barrinhas
+                Navigator.pop(context); // Abre o Drawer ao clicar nas três barrinhas
               },
             ),
           ),
@@ -315,18 +308,6 @@ class _PassengerInfoScreenState
               )),
         ),
       ],
-    );
-  }
-
-  Widget _buildBackButton(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: IconButton(
-        icon: Icon(Icons.arrow_back, size: 30),
-        onPressed: () {
-          Navigator.pop(context); // Retorna à tela anterior
-        },
-      ),
     );
   }
 }
