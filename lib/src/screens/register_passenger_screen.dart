@@ -49,7 +49,6 @@ class _RegisterPassengerScreen extends State<RegisterPassengerScreen> {
       });
       return;
     }
-
     try {
       await apiService.sendMultipartFormData(
         url: '/passenger',

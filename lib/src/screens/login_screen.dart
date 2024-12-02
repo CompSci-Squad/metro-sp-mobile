@@ -32,12 +32,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final postResponse = await apiService.post('/login', {
-        'email': email,
-        'password': password,
+        'email': email.trim(),
+        'password': password.trim(),
       });
 
+      print(postResponse);
+
       if (_isLoginSuccessful(postResponse)) {
-        await _handleSuccessfulLogin(postResponse["accessToken"], email);
+        await _handleSuccessfulLogin(postResponse["access_token"], email);
       } else {
         _showDialog('E-mail ou senha incorreto. Por favor, tente novamente.');
       }
@@ -53,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   bool _isLoginSuccessful(Map<String, dynamic> response) {
-    return response.containsKey("accessToken");
+    return response.containsKey("access_token");
   }
 
   Future<void> _handleSuccessfulLogin(String token, String email) async {

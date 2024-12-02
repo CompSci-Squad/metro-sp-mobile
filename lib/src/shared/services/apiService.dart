@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:html' as html;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mime/mime.dart';
 
 class ApiService {
   final String baseUrl;
@@ -25,6 +26,8 @@ class ApiService {
     if (_authToken != null) {
       headers['Authorization'] = 'Bearer $_authToken';
     }
+
+    headers['Content-Type'] = "application/json";
 
     try {
       switch (method.toUpperCase()) {
@@ -99,39 +102,38 @@ class ApiService {
     Map<String, String>? headers,
   }) async {
     Uri uri = Uri.parse('$baseUrl$url');
-    headers ??= {}; // Ensure headers are not null
+    headers ??= {};
 
-    // Check if the platform is Web or not
+    if (_authToken != null) {
+      headers['Authorization'] = 'Bearer $_authToken';
+    }
+
     if (kIsWeb) {
-      // Web-specific code using html.FormData
       try {
+        final mimeType = lookupMimeType(file.name) ?? 'application/octet-stream';
+        var completer = Completer<Map<String, dynamic>>();
         final formData = html.FormData();
 
-        // Add fields to FormData
         fields.forEach((key, value) {
           formData.append(key, value);
         });
 
-        // Read file as bytes asynchronously (for Web)
         final bytes = await file.readAsBytes();
+        final blob = html.Blob([bytes], mimeType);
+        formData.appendBlob('file', blob, 'image.jpg');
 
-        final blob = html.Blob([bytes]);
-        formData.appendBlob(fileFieldName, blob, file.name);
 
-        // Create the request
         final request = html.HttpRequest();
         request.open('POST', uri.toString());
 
-        // Set headers
         headers.forEach((key, value) {
-          request.setRequestHeader(key, value);
+          if (key.toLowerCase() != 'content-type') {
+            request.setRequestHeader(key, value);
+          }
         });
 
-        // Return a Future and listen to onLoadEnd
-        var completer = Completer<Map<String, dynamic>>();
-
         request.onLoadEnd.listen((e) async {
-          if (request.status == 200) {
+          if (request.status == 201) {
             final responseBody = request.responseText;
             try {
               completer.complete(jsonDecode(responseBody!));
@@ -144,9 +146,7 @@ class ApiService {
           }
         });
 
-        // Send the request
         request.send(formData);
-
         return completer.future;
       } catch (e) {
         throw Exception('Failed to send multipart form data (Web): $e');
