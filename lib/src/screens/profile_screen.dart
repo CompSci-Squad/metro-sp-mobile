@@ -29,7 +29,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        drawer: buildAppDrawer(context),
         body: FutureBuilder(
             future: _dataFuture,
             builder: (context, snapshot) {
@@ -70,7 +69,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   "Estação", data["stations"][0]["name"]),
                               _buildThickerDivider(),
                               const Spacer(),
-                              _buildBackButton(context),
                             ],
                           ),
                         ),
@@ -104,46 +102,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Drawer buildAppDrawer(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(0, 20, 137, 1),
-            ),
-            child: Text(
-              'Menu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-          ),
-          _buildDrawerItem('Cadastrar Novo Usuário', () {
-            Navigator.pushReplacementNamed(
-                context, '/telaCadastrarNovoUsuario');
-          }),
-          _buildDrawerItem('Verificar Cadastro Usuário', () {
-            Navigator.pushReplacementNamed(context, '/telaVerificarCadastro');
-          }),
-        ],
-      ),
-    );
-  }
-
-  ListTile _buildDrawerItem(String title, VoidCallback onTap,
-      {Color? textColor}) {
-    return ListTile(
-      title: Text(
-        title,
-        style: TextStyle(color: textColor ?? Colors.black),
-      ),
-      onTap: onTap,
-    );
-  }
-
   Widget _buildGreetingSection(BuildContext context) {
     final userName =
         Provider.of<GlobalVariables>(context, listen: false).user?["name"];
@@ -165,12 +123,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Builder(
             builder: (context) => IconButton(
               icon: const Icon(
-                Icons.menu,
+                Icons.arrow_back,
                 size: 43,
                 color: Colors.black,
               ),
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                Navigator.pop(context);
               },
             ),
           ),
@@ -201,15 +159,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildBackButton(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: IconButton(
-        icon: const Icon(Icons.arrow_back, size: 30),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    );
-  }
 }

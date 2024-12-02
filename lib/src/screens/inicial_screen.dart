@@ -111,19 +111,15 @@ class InicialScreen extends StatelessWidget {
 
         // Ícone das três barrinhas que abre o Drawer, posicionado sobre o ListTile
         Positioned(
-          left: 0, // Ícone alinhado bem ao canto esquerdo
-          top: 8, // Ajuste para alinhar verticalmente
-          child: Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(
-                Icons.menu,
-                size: 43, // Tamanho do ícone
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Scaffold.of(context)
-                    .openDrawer(); // Abre o Drawer ao clicar nas três barrinhas
-              },
+          left: 0,
+          top: 8,
+          child: CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.grey[300],
+            child: const Icon(
+              Icons.person,
+              size: 30,
+              color: Colors.black54,
             ),
           ),
         ),

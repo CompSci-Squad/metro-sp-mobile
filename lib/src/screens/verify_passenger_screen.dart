@@ -76,7 +76,6 @@ class _VerifyPassengerScreenState extends State<VerifyPassengerScreen> {
                   if (_isLoading) Center(child: CircularProgressIndicator()),
                   _buildOperationButtons(context),
                   Spacer(),
-                  _buildBackButton(context),
                 ],
               ),
             ),
@@ -187,12 +186,12 @@ class _VerifyPassengerScreenState extends State<VerifyPassengerScreen> {
           child: Builder(
             builder: (context) => IconButton(
               icon: const Icon(
-                Icons.menu,
+                Icons.arrow_back,
                 size: 43,
                 color: Colors.black,
               ),
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                Navigator.pop(context);
               },
             ),
           ),
@@ -257,18 +256,6 @@ class _VerifyPassengerScreenState extends State<VerifyPassengerScreen> {
             )
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildBackButton(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: IconButton(
-        icon: Icon(Icons.arrow_back, size: 30),
-        onPressed: () {
-          Navigator.pop(context);
-        },
       ),
     );
   }
