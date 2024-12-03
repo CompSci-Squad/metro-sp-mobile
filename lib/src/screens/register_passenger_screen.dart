@@ -386,7 +386,8 @@ class _RegisterPassengerScreen extends State<RegisterPassengerScreen> {
               selectedReason = newValue;
               switch (selectedReason) {
                 case JustificationType.AGE:
-                  justificationText = 'Digite a sua data de nascimento (ano-mês-dia)';
+                  justificationText =
+                      'Digite a sua data de nascimento (ano-mês-dia)';
                   break;
                 case JustificationType.UNEMPLOYED:
                   justificationText = 'Digite seu numero de cadastro';
@@ -446,25 +447,6 @@ class _RegisterPassengerScreen extends State<RegisterPassengerScreen> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeCamera();
-  }
-
-  Future<void> _initializeCamera() async {
-    cameras = await availableCameras(); // Lista de câmeras disponíveis
-    cameraController = CameraController(
-      cameras[0], // Escolhe a câmera principal
-      ResolutionPreset.medium, // Define a qualidade da câmera
-    );
-
-    await cameraController.initialize(); // Inicializa o controlador
-    if (mounted) {
-      setState(() {}); // Atualiza o estado para renderizar o CameraPreview
-    }
-  }
-
   Future<void> _capturePhoto() async {
     if (!cameraController.value.isInitialized) {
       return; // Retorna se a câmera não está inicializada
@@ -504,21 +486,23 @@ class _RegisterPassengerScreen extends State<RegisterPassengerScreen> {
           children: [
             IconButton(
               onPressed: () async {
-                // Navigate to CameraFullScreenPage and capture the image
-                final XFile? image = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CameraFullScreenPage(
-                      cameraController: cameraController,
-                      onImageCaptured: handleImageCaptured,
+                if (cameraController.value.isInitialized) {
+                  final XFile? image = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CameraFullScreenPage(
+                        cameraController: cameraController,
+                        onImageCaptured: handleImageCaptured,
+                      ),
                     ),
-                  ),
-                );
-                // If a photo was taken, store it in the class variable
-                if (image != null) {
-                  setState(() {
-                    capturedImage = image; // Store the captured image
-                  });
+                  );
+                  if (image != null) {
+                    setState(() {
+                      capturedImage = image;
+                    });
+                  }
+                } else {
+                  _showErrorDialog(message: 'Câmera não foi inicializada.');
                 }
               },
               icon: const Icon(Icons.camera_alt, size: 40, color: Colors.black),
@@ -566,7 +550,25 @@ class _RegisterPassengerScreen extends State<RegisterPassengerScreen> {
     );
   }
 
-  
+  @override
+  void initState() {
+    super.initState();
+    _initializeCamera();
+  }
+
+  Future<void> _initializeCamera() async {
+    try {
+      cameras = await availableCameras();
+      cameraController = CameraController(
+        cameras.first, // Escolha a primeira câmera disponível
+        ResolutionPreset.high,
+      );
+      await cameraController.initialize();
+      setState(() {}); // Atualize o estado para renderizar o preview da câmera
+    } catch (e) {
+      print('Erro ao inicializar a câmera: $e');
+    }
+  }
 }
 
 class CameraFullScreenPage extends StatelessWidget {
